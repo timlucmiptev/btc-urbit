@@ -1,0 +1,42 @@
+{
+    "niv": {
+        "branch": "master",
+        "builtin": true,
+        "description": "Easy dependency management for Nix projects",
+        "homepage": "https://github.com/nmattia/niv",
+        "owner": "nmattia",
+        "repo": "niv",
+        "rev": "f73bf8d584148677b01859677a63191c31911eae",
+        "sha256": "0jlmrx633jvqrqlyhlzpvdrnim128gc81q5psz2lpp2af8p8q9qs",
+        "type": "tarball",
+        "url": "https://github.com/nmattia/niv/archive/f73bf8d584148677b01859677a63191c31911eae.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "nixos-19.09",
+        "builtin": true,
+        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs-channels",
+        "rev": "0a11634a29c1c9ffe7bfa08fc234fef2ee978dbb",
+        "sha256": "0vj5k3djn1wlwabzff1kiiy3vs60qzzqgzjbaiwqxacbvlrci10y",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/0a11634a29c1c9ffe7bfa08fc234fef2ee978dbb.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "osx-sdk": {
+        "branch": "master",
+        "description": "A collection of those pesky SDK folders: MacOSX10.1.5.sdk thru MacOSX10.15.sdk",
+        "homepage": "https://github.com/phracker/MacOSX-SDKs",
+        "owner": "phracker",
+        "release": "10.13",
+        "repo": "MacOSX-SDKs",
+        "rev": "ef9fe35d5691b6dd383c8c46d867a499817a01b6",
+        "sdk": "10.11",
+        "sha256": "132vz288l6pk7ci49fcvkkmci47w451ggidh3sarm1f9m7sg7b1k",
+        "type": "tarball",
+        "url": "https://github.com/phracker/MacOSX-SDKs/releases/download/10.13/MacOSX10.11.sdk.tar.xz",
+        "url_template": "https://github.com/<owner>/<repo>/releases/download/<release>/MacOSX<sdk>.sdk.tar.xz"
+    }
+}
