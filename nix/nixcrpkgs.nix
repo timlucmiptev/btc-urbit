@@ -1,7 +1,7 @@
 let
 
   nixpkgs = import ./nixpkgs.nix;
-  osx_sdk = nixpkgs.sources.osx-sdk.url;
+  osx_sdk = nixpkgs.sources.osx-sdk;
 
 in
 

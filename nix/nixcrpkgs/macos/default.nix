@@ -131,11 +131,7 @@ let
 
   # TODO: add instructions for building the SDK tarball, probably want a copy of
   # the script from osxcross.
-  sdk = native.make_derivation rec {
-    name = "macos-sdk";
-    builder = ./sdk_builder.sh;
-    src = osx_sdk;
-  };
+  sdk = osx_sdk;
 
   toolchain = native.make_derivation rec {
     name = "macos-toolchain";
