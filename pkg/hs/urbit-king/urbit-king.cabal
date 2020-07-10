@@ -1,0 +1,229 @@
+cabal-version: 2.4
+name:          urbit-king
+version:       0.10.4
+synopsis:      Urbit King
+homepage:      https://github.com/urbit/urbit
+license:       MIT
+license-file:  LICENSE
+
+source-repository head
+  type:     git
+  location: https://github.com/urbit/urbit
+  subdir:   pkg/hs/urbit-king
+
+common base
+  default-language:   Haskell2010
+  default-extensions:
+    NoImplicitPrelude
+    BangPatterns
+    BinaryLiterals
+    ConstraintKinds
+    DataKinds
+    DefaultSignatures
+    DeriveAnyClass
+    DeriveFoldable
+    DeriveFunctor
+    DeriveGeneric
+    DeriveTraversable
+    DerivingStrategies
+    DoAndIfThenElse
+    DuplicateRecordFields
+    EmptyDataDecls
+    ExistentialQuantification
+    ExplicitNamespaces
+    FlexibleContexts
+    FlexibleInstances
+    FunctionalDependencies
+    GADTs
+    GeneralizedNewtypeDeriving
+    InstanceSigs
+    KindSignatures
+    LambdaCase
+    MagicHash
+    MultiParamTypeClasses
+    MultiWayIf
+    NamedFieldPuns
+    NumericUnderscores
+    OverloadedLabels
+    OverloadedStrings
+    PartialTypeSignatures
+    PatternGuards
+    PatternSynonyms
+    PolyKinds
+    RankNTypes
+    RecordWildCards
+    ScopedTypeVariables
+    StandaloneDeriving
+    StarIsType
+    TupleSections
+    TypeApplications
+    TypeFamilies
+    TypeOperators
+    TypeSynonymInstances
+    ViewPatterns
+  ghc-options:
+    -- -Weverything -Wno-missing-local-signatures
+    -- -Wno-missing-import-lists -Wno-safe -Wno-unsafe
+    -- -Wno-monomorphism-restriction -Wno-missed-specialisations
+    -- -Wno-all-missed-specialisations -Werror -O2
+  build-depends:
+    , base >=4.12 && <5
+
+common threaded
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+
+common static
+  ghc-options: -static
+
+library
+  import:          base
+  hs-source-dirs:  lib
+  build-depends:
+    , QuickCheck
+    , ansi-terminal
+    , binary
+    , bytestring
+    , case-insensitive
+    , classy-prelude
+    , conduit
+    , containers
+    , cryptohash-sha256
+    , cryptohash-sha512
+    , directory
+    , ed25519
+    , entropy
+    , exceptions
+    , ghc-prim
+    , hashable
+    , hashtables
+    , http-client
+    , http-client-tls
+    , http-types
+    , integer-gmp
+    , largeword
+    , lens
+    , lmdb-static
+    , lock-file
+    , memory
+    , mtl
+    , murmur3
+    , network
+    , optparse-applicative
+    , pem
+    , pretty-show
+    , process
+    , random
+    , regex-tdfa
+    , regex-tdfa-text
+    , resourcet
+    , rio
+    , template-haskell ^>= 2.14
+    , terminal-progress-bar
+    , terminal-size
+    , text
+    , time ^>= 1.8
+    , transformers
+    , unix
+    , unliftio-core
+    , urbit-atom
+    , urbit-atom
+    , urbit-azimuth
+    , urbit-hob
+    , utf8-string
+    , vector
+    , wai
+    , wai-conduit
+    , wai-websockets
+    , warp
+    , warp-tls
+    , web3
+    , websockets
+  exposed-modules:
+    Data.RAcquire
+    Paths_urbit_king
+    Urbit.Arvo
+    Urbit.Arvo.Common
+    Urbit.Arvo.Effect
+    Urbit.Arvo.Event
+    Urbit.King.API
+    Urbit.King.App
+    Urbit.King.CLI
+    Urbit.King.Config
+    Urbit.King.EventBrowser
+    Urbit.King.Main
+    Urbit.King.TryJamPill
+    Urbit.Noun
+    Urbit.Noun.Conversions
+    Urbit.Noun.Convert
+    Urbit.Noun.Core
+    Urbit.Noun.Cue
+    Urbit.Noun.Jam
+    Urbit.Noun.TH
+    Urbit.Noun.Tank
+    Urbit.Noun.Tree
+    Urbit.Prelude
+    Urbit.Time
+    Urbit.Timer
+    Urbit.Vere.Ames
+    Urbit.Vere.Behn
+    Urbit.Vere.Clay
+    Urbit.Vere.Dawn
+    Urbit.Vere.Http
+    Urbit.Vere.Http.Client
+    Urbit.Vere.Http.Server
+    Urbit.Vere.LMDB
+    Urbit.Vere.LockFile
+    Urbit.Vere.Log
+    Urbit.Vere.NounServ
+    Urbit.Vere.Pier
+    Urbit.Vere.Pier.Types
+    Urbit.Vere.Serf
+    Urbit.Vere.Term
+    Urbit.Vere.Term.API
+    Urbit.Vere.Term.Demux
+    Urbit.Vere.Term.Logic
+    Urbit.Vere.Term.Render
+
+executable urbit-king
+  import:         base, threaded, static
+  main-is:        Main.hs
+  hs-source-dirs: app
+  build-depends:
+    , urbit-king
+    
+test-suite urbit-king-tests
+  import:         base, threaded
+  type:           exitcode-stdio-1.0
+  main-is:        Main.hs
+  hs-source-dirs: test
+  build-depends:
+    , QuickCheck
+    , base-unicode-symbols
+    , bytestring
+    , classy-prelude
+    , conduit
+    , directory
+    , ed25519
+    , http-types
+    , largeword
+    , network
+    , resourcet
+    , tasty
+    , tasty-golden
+    , tasty-hunit
+    , tasty-quickcheck
+    , tasty-th
+    , text
+    , urbit-hob
+    , urbit-king
+  other-modules:
+    AmesTests
+    ArvoTests
+    BehnTests
+    ClayTests
+    DawnTests
+    DeriveNounTests
+    HoonMapSetTests
+    JamTests
+    LogTests
+    NounConversionTests
