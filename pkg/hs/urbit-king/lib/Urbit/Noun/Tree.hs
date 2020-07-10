@@ -1,5 +1,4 @@
-{-# LANGUAGE DisambiguateRecordFields #-}
-{-# LANGUAGE DuplicateRecordFields    #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 {-|
     Hoon's `map` and `set` types and conversions to/from Nouns.

@@ -1,9 +1,10 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 {-|
     Serf Interface
 
     TODO: `recvLen` is not big-endian safe.
 -}
-
 module Urbit.Vere.Serf ( Serf, sStderr, SerfState(..), doJob
                        , run, shutdown, kill
                        , replay, bootFromSeq, snapshot

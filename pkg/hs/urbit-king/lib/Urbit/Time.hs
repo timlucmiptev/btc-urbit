@@ -1,7 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 {-|
     TODO This is slow.
 -}
-
 module Urbit.Time where
 
 import Control.Lens

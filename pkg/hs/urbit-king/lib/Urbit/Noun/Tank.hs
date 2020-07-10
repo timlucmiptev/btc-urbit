@@ -1,7 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 {-|
     Pretty Printer Types
 -}
-
 module Urbit.Noun.Tank where
 
 import ClassyPrelude

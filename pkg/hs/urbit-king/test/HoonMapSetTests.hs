@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module HoonMapSetTests (tests) where
 
 import RIO.Directory

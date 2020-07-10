@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 {-|
     Template Haskell Code to Generate FromNoun and ToNoun Instances
 -}

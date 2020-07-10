@@ -1,7 +1,8 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 {-|
     Large Library of conversion between various types and Nouns.
 -}
-
 module Urbit.Noun.Conversions
   ( Nullable(..), Jammed(..), AtomCell(..)
   , Word128, Word256, Word512
@@ -91,7 +92,7 @@ instance ToNoun UD where
   toNoun = toNoun . Cord . tshow . unUD
 
 instance FromNoun UD where
-  parseNoun n = named "UD" do
+  parseNoun n = named "UD" $ do
     Cord t <- parseNoun n
     readMay t & \case
       Nothing -> fail ("invalid decimal atom: " <> unpack (filter (/= '.') t))

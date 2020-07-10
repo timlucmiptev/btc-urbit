@@ -1,3 +1,5 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module DeriveNounTests (tests) where
 
 import Data.Acquire
