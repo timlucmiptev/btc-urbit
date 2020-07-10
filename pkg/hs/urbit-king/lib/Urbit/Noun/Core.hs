@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE Strict     #-}
 {-# LANGUAGE StrictData #-}
 

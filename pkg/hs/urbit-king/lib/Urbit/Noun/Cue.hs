@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -O2 #-}
-
 {-|
     Fast implementation of `cue :: Atom -> Maybe Noun`.
 
