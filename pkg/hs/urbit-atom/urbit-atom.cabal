@@ -60,6 +60,7 @@ common base
     TypeFamilies
     TypeOperators
     TypeSynonymInstances
+    UnboxedTuples
     ViewPatterns
   ghc-options:
     -Weverything -Wno-missing-local-signatures
