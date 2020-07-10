@@ -251,7 +251,7 @@ checkEvs pierPath first last = do
                     (mug, wen, evNoun) <- unpackJob n
                     fromNounErr evNoun & \case
                         Left err       -> logError (displayShow (eId, err))
-                        Right (_ ∷ Ev) -> pure ()
+                        Right (_ :: Ev) -> pure ()
             showEvents pb (succ eId) cycle
 
     unpackJob :: Noun -> RIO e (Mug, Wen, Noun)
@@ -264,7 +264,7 @@ checkEvs pierPath first last = do
     so this should never actually be created. We just do this to avoid
     letting the serf use an existing snapshot.
 -}
-collectAllFx :: ∀e. HasLogFunc e => FilePath -> RIO e ()
+collectAllFx :: forall e. HasLogFunc e => FilePath -> RIO e ()
 collectAllFx top = do
     logTrace $ display $ pack @Text top
     rwith collectedFX $ \() ->
@@ -285,7 +285,7 @@ collectAllFx top = do
 
 --------------------------------------------------------------------------------
 
-replayPartEvs :: ∀e. (HasStderrLogFunc e, HasLogFunc e)
+replayPartEvs :: forall e. (HasStderrLogFunc e, HasLogFunc e)
               => FilePath -> Word64 -> RIO e ()
 replayPartEvs top last = do
     logTrace $ display $ pack @Text top
@@ -564,7 +564,7 @@ main = do
 
 --------------------------------------------------------------------------------
 
-connTerm :: ∀e. HasLogFunc e => FilePath -> RIO e ()
+connTerm :: forall e. HasLogFunc e => FilePath -> RIO e ()
 connTerm pier =
     Term.runTerminalClient pier
 

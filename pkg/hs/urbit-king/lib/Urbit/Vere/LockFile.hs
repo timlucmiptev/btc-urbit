@@ -6,25 +6,28 @@ module Urbit.Vere.LockFile (lockFile) where
 
 import Urbit.Prelude
 
-import Data.Default                (def)
-import RIO.Directory               (createDirectoryIfMissing)
 import System.IO.LockFile.Internal (LockingParameters(..), RetryStrategy(..),
                                     lock, unlock)
+import qualified System.Directory as Directory
 
 --------------------------------------------------------------------------------
 
 lockFile :: HasLogFunc e => FilePath -> RAcquire e ()
 lockFile pax = void $ mkRAcquire start stop
   where
-    fil = pax <> "/.vere.lock"
-
     stop handle = do
-        logInfo $ display @Text $ ("Releasing lock file: " <> pack fil)
-        io $ unlock fil handle
-
-    params = def { retryToAcquireLock = No }
+        logInfo $ display @Text $ ("Releasing lock file: " <> pack path)
+        io $ unlock path handle
 
     start = do
-        createDirectoryIfMissing True pax
-        logInfo $ display @Text $ ("Taking lock file: " <> pack fil)
-        io (lock params fil)
+        io (Directory.createDirectoryIfMissing True pax)
+        logInfo $ display @Text $ ("Taking lock file: " <> pack path)
+        io (lock params path)
+
+    path = pax <> "/.vere.lock"
+
+    params =
+        LockingParameters
+            { retryToAcquireLock  = No
+            , sleepBetweenRetries = 8_000_000 -- 8s
+            }

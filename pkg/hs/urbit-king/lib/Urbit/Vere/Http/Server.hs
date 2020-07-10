@@ -126,7 +126,7 @@ reorgHttpEvent = \case
 
     - Keeps the MVar lock until the restart process finishes.
 -}
-restartService :: ∀e s. HasLogFunc e
+restartService :: forall e s. HasLogFunc e
                => MVar (Maybe s)
                -> RIO e s
                -> (s -> RIO e ())
@@ -597,7 +597,7 @@ respond (Drv v) reqId ev = do
                       for_ (reorgHttpEvent ev) $
                         atomically . respondToLiveReq (sLiveReqs sv) reqId
 
-serv :: ∀e. HasShipEnv e
+serv :: forall e. HasShipEnv e
      => KingId -> QueueEv -> Bool
      -> ([Ev], RAcquire e (EffCb e HttpServerEf))
 serv king plan isFake =

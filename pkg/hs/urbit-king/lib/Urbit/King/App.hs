@@ -21,7 +21,7 @@ import System.Directory (createDirectoryIfMissing, getHomeDirectory)
 --------------------------------------------------------------------------------
 
 class HasConfigDir a where
-    configDirL ∷ Lens' a FilePath
+    configDirL :: Lens' a FilePath
 
 class HasStderrLogFunc a where
     stderrLogFuncL :: Lens' a LogFunc

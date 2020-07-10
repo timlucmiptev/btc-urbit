@@ -20,8 +20,7 @@ module Urbit.Noun
     ) where
 
 import ClassyPrelude
-import Control.Lens
-
+import Data.Function ((&))
 import Data.Word
 import Urbit.Atom
 import Urbit.Noun.Conversions
@@ -32,11 +31,12 @@ import Urbit.Noun.Jam
 import Urbit.Noun.Tank
 import Urbit.Noun.TH
 import Urbit.Noun.Tree
+import qualified Control.Lens  as Lens
 
 --------------------------------------------------------------------------------
 
-_Cue :: Prism' ByteString Noun
-_Cue = prism' jamBS (eitherToMaybe . cueBS)
+_Cue :: Lens.Prism' ByteString Noun
+_Cue = Lens.prism' jamBS (eitherToMaybe . cueBS)
   where
     eitherToMaybe (Left _)  = Nothing
     eitherToMaybe (Right x) = Just x
@@ -49,7 +49,7 @@ data LoadErr
 
 instance Exception LoadErr
 
-loadFile :: ∀a. FromNoun a => FilePath -> IO (Either LoadErr a)
+loadFile :: forall a. FromNoun a => FilePath -> IO (Either LoadErr a)
 loadFile pax = try $ do
     byt <- try (readFile pax) >>= either (throwIO . FileErr) pure
     non <- cueBS byt & either (throwIO . CueErr) pure

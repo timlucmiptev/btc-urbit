@@ -2,7 +2,11 @@
     RAcquire = ReaderT e Acquire a
 -}
 module Data.RAcquire
-    ( RAcquire 
+    ( MonadRIO (liftRIO)
+    , MonadAcquire (liftAcquire)
+    , RAcquire
+    , mkRAcquire
+    , rwith
     ) where
 
 import Prelude

@@ -1,4 +1,5 @@
-{-# LANGUAGE CPP, UnliftedFFITypes #-}
+{-# LANGUAGE CPP #-}
+{-# LANGUAGE UnliftedFFITypes #-}
 
 {-|
     Atom implementation with fast conversions between bytestrings

@@ -168,7 +168,7 @@ startUp conf@(Config pierPath flags) = do
                 , std_err = CreatePipe
                 }
 
-readStdErr :: ∀e. HasLogFunc e => Handle -> MVar (Text -> RIO e ()) -> RIO e ()
+readStdErr :: forall e. HasLogFunc e => Handle -> MVar (Text -> RIO e ()) -> RIO e ()
 readStdErr h print =
     untilEOFExn $ do
         raw <- io $ IO.hGetLine h
@@ -318,7 +318,7 @@ handshake serf ident = do
 
     pure ss
 
-sendWork :: ∀e. HasLogFunc e => Serf e -> Job -> RIO e SerfResp
+sendWork :: forall e. HasLogFunc e => Serf e -> Job -> RIO e SerfResp
 sendWork w job =
   do
     sendOrder w (OWork job)
@@ -397,7 +397,7 @@ logStderr action = do
   logFunc <- view stderrLogFuncL
   runRIO logFunc action
 
-bootFromSeq :: ∀e. (HasStderrLogFunc e, HasLogFunc e)
+bootFromSeq :: forall e. (HasStderrLogFunc e, HasLogFunc e)
             => Serf e -> BootSeq -> RIO e ([Job], SerfState)
 bootFromSeq serf (BootSeq ident nocks ovums) = do
     handshake serf ident >>= \case
@@ -526,7 +526,7 @@ persistFX log = loop
             lift $ Log.writeEffectsRow log eId (jamBS $ toNoun fx)
             loop
 
-doCollectFX :: ∀e. HasLogFunc e
+doCollectFX :: forall e. HasLogFunc e
             => Serf e -> SerfState -> ConduitT Job (EventId, FX) (RIO e) ()
 doCollectFX serf = go
   where

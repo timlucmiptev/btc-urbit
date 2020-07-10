@@ -65,7 +65,7 @@ runGala point =
     q  <- newTQueueIO
     let (_, runAmes) =
           ames pid (fromIntegral point) True (writeTQueue q) noStderr
-    cb ← runAmes
+    cb <- runAmes
     rio $ cb turfEf
     pure (q, cb)
   where
@@ -160,7 +160,7 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (LargeKey a b) where
 genIpv4 :: Gen Ipv4
 genIpv4 = do
   x <- arbitrary
-  if (x == 0 || (x≥256 && x≤512))
+  if (x == 0 || (x >= 256 && x <= 512))
     then genIpv4
     else pure (Ipv4 x)
 

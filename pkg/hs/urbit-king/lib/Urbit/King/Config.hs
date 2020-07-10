@@ -21,7 +21,7 @@ makeLenses ''PierConfig
 class HasPierConfig env where
     pierConfigL :: Lens' env PierConfig
 
-pierPathL ∷ HasPierConfig a => Lens' a FilePath
+pierPathL :: HasPierConfig a => Lens' a FilePath
 pierPathL = pierConfigL . pcPierPath
 
 dryRunL :: HasPierConfig a => Lens' a Bool

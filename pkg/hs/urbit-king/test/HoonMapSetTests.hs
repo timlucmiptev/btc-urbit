@@ -2,7 +2,6 @@
 
 module HoonMapSetTests (tests) where
 
-import RIO.Directory
 import Urbit.Prelude hiding (encodeUtf8)
 
 import Data.Text.Lazy.Encoding (encodeUtf8)
@@ -40,7 +39,7 @@ type TreeTests = [TreeTest]
 
 -- Utils -----------------------------------------------------------------------
 
-roundTrip :: ∀a. Eq a => (a -> a) -> a -> Bool
+roundTrip :: forall a. Eq a => (a -> a) -> a -> Bool
 roundTrip f x = f x == x
 
 

@@ -170,7 +170,7 @@ getSnapshot top last = do
 acquireWorker :: RIO e () -> RAcquire e (Async ())
 acquireWorker act = mkRAcquire (async act) cancel
 
-pier :: ∀e. (HasConfigDir e, HasLogFunc e, HasNetworkConfig e, HasPierConfig e)
+pier :: forall e. (HasConfigDir e, HasLogFunc e, HasNetworkConfig e, HasPierConfig e)
      => (Serf e, EventLog, SerfState)
      -> MVar ()
      -> RAcquire e ()
@@ -181,7 +181,7 @@ pier (serf, log, ss) mStart = do
     saveM     <- newEmptyTMVarIO
     shutdownM <- newEmptyTMVarIO
 
-    kapi ← King.kingAPI
+    kapi <- King.kingAPI
 
     termApiQ <- atomically $ do
         q <- newTQueue
@@ -362,7 +362,7 @@ logEffect ef =
        GoodParse e -> pack $ unlines $ fmap ("\t" <>) $ lines $ ppShow e
        FailParse n -> pack $ unlines $ fmap ("\t" <>) $ lines $ ppShow n
 
-runCompute :: ∀e. HasLogFunc e
+runCompute :: forall e. HasLogFunc e
            => Serf e
            -> SerfState
            -> STM Ev
@@ -418,7 +418,7 @@ instance Exception PersistExn where
             , "\tExpected " <> show expected <> " but got " <> show got
             ]
 
-runPersist :: ∀e. (HasPierConfig e, HasLogFunc e)
+runPersist :: forall e. (HasPierConfig e, HasLogFunc e)
            => EventLog
            -> TQueue (Job, FX)
            -> (FX -> STM ())
