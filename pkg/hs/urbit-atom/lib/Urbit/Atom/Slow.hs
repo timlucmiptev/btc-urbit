@@ -61,7 +61,7 @@ bytesAtom :: ByteString -> Natural
 bytesAtom = BS.foldr' go 0
  where
   go :: Word8 -> Natural -> Natural
-  go byt acc = shiftL acc 8 .|. fromIntegral byt
+  go byt' acc = shiftL acc 8 .|. fromIntegral byt'
 
 
 --------------------------------------------------------------------------------

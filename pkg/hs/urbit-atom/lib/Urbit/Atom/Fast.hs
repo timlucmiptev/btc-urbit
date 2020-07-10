@@ -86,8 +86,8 @@ bigNatBitWidth# :: BigNat -> Word#
 bigNatBitWidth# nat =
   lswBits `plusWord#` ((int2Word# lastIdx) `timesWord#` BIT##)
  where
-  I# lastIdx = (I# (G.sizeofBigNat# nat)) - 1
-  lswBits    = wordBitWidth# (G.indexBigNat# nat lastIdx)
+  !(I# lastIdx) = (I# (G.sizeofBigNat# nat)) - 1
+  lswBits       = wordBitWidth# (G.indexBigNat# nat lastIdx)
 
 atomBitWidth# :: Natural -> Word#
 atomBitWidth# (NatS# gl) = wordBitWidth# gl
@@ -141,7 +141,7 @@ bytesPill = Pill . strip
 -}
 bigNatWords :: BigNat -> Vector Word
 bigNatWords bn | G.isZeroBigNat bn = mempty
-bigNatWords bn@(BN# bArr) =
+bigNatWords (BN# bArr) =
   Vector 0 (I# (sizeofByteArray# bArr) `div` BYT) (Prim.ByteArray bArr)
 
 {-|
@@ -151,10 +151,10 @@ bigNatWords bn@(BN# bArr) =
 -}
 wordsBigNat :: Vector Word -> BigNat
 wordsBigNat v@(Vector off (I# len) (Prim.ByteArray buf)) = case VP.length v of
-  0 -> G.zeroBigNat
-  1 -> case VP.unsafeIndex v 0 of
+  0  -> G.zeroBigNat
+  1  -> case VP.unsafeIndex v 0 of
     W# w -> G.wordToBigNat w
-  n -> if off /= 0
+  _n -> if off /= 0
     then error "words2Nat: bad-vec"
     else G.byteArrayToBigNat# buf len
 
@@ -168,9 +168,9 @@ wordsBigNat v@(Vector off (I# len) (Prim.ByteArray buf)) = case VP.length v of
 -}
 _wordsBigNat :: Vector Word -> BigNat
 _wordsBigNat v = case VP.length v of
-  0 -> G.zeroBigNat
-  1 -> G.wordToBigNat w where W# w = VP.unsafeIndex v 0
-  n -> if offset v == 0 then extract v else extract (VP.force v)
+  0  -> G.zeroBigNat
+  1  -> G.wordToBigNat w where !(W# w) = VP.unsafeIndex v 0
+  _n -> if offset v == 0 then extract v else extract (VP.force v)
  where
   offset (Vector off _ _) = off
 
@@ -242,7 +242,7 @@ bsToWords bs = VP.generate (1 + BS.length bs `div` BYT)
 vecBytes :: Vector Word8 -> ByteString
 vecBytes (Vector off sz buf) = unsafePerformIO $ do
   fp <- BS.mallocByteString sz
-  let Ptr a = Ptr.unsafeForeignPtrToPtr fp -- Safe b/c returning fp
+  let !(Ptr a) = Ptr.unsafeForeignPtrToPtr fp -- Safe b/c returning fp
   copyByteArrayToAddr a buf 0 sz
   pure (BS.PS fp off sz)
  where
@@ -251,8 +251,8 @@ vecBytes (Vector off sz buf) = unsafePerformIO $ do
 
   --  Hack to get GHCJS build working, since it has an old version of the
   --  `primitive` library.
-  copyByteArrayToAddr dst# (Prim.ByteArray src#) soff sz =
-    primitive_ (copyByteArrayToAddr# src# (unI# soff) dst# (unI# sz))
+  copyByteArrayToAddr dst# (Prim.ByteArray src#) soff sz' =
+    primitive_ (copyByteArrayToAddr# src# (unI# soff) dst# (unI# sz'))
 
 _bytesVec :: ByteString -> Vector Word8
 _bytesVec bs = VP.generate (BS.length bs) (BS.index bs)
@@ -300,8 +300,8 @@ exportNaturalToByteString nat (I# i#) = unsafePerformIO $ do
   let sz# = sizeInBaseNatural nat 256#
   let szi = fromIntegral (W# sz#)
   fp <- BS.mallocByteString szi
-  let Ptr a = Ptr.unsafeForeignPtrToPtr fp
-  exportNaturalToAddr nat a i#
+  let !(Ptr a) = Ptr.unsafeForeignPtrToPtr fp
+  _  <- exportNaturalToAddr nat a i#
   pure (BS.PS fp 0 szi)
 
 exportBytes :: Natural -> ByteString
@@ -328,8 +328,8 @@ importBytes :: ByteString -> Natural
 importBytes = go . stripBytes
  where
   go (BS.PS fp 0 sz) = unsafePerformIO $ do
-    let Ptr a  = Ptr.unsafeForeignPtrToPtr fp -- TODO Not safe!
-    let W# sz# = fromIntegral sz
+    let !(Ptr a)  = Ptr.unsafeForeignPtrToPtr fp -- TODO Not safe!
+    let !(W# sz#) = fromIntegral sz
     res <- bigNatNatural <$> G.importBigNatFromAddr a sz# 0#
     Ptr.touchForeignPtr fp
     pure res
