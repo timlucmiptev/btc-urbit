@@ -3,7 +3,6 @@
     the *same* logical arvo terminal. Terminals that connect will be
     given full event history since the creation of the demuxer.
 -}
-
 module Urbit.Vere.Term.Demux (Demux, mkDemux, addDemux, useDemux) where
 
 import Urbit.Prelude

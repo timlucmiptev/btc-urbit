@@ -7,7 +7,6 @@
 
     TODO Support Big Endian.
 -}
-
 module Urbit.Atom.Fast
   ( wordsAtom
   , bytesAtom

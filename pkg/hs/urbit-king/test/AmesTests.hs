@@ -1,5 +1,4 @@
 {-# LANGUAGE TemplateHaskell #-}
-
 module AmesTests (tests) where
 
 import Data.Conduit

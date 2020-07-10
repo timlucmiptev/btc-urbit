@@ -1,7 +1,6 @@
 {-|
     UNIX Filesystem Driver
 -}
-
 module Urbit.Vere.Clay (clay) where
 
 import Urbit.Arvo            hiding (Term)

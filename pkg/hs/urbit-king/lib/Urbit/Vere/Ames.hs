@@ -1,7 +1,6 @@
 {-|
     Ames IO Driver -- UDP
 -}
-
 module Urbit.Vere.Ames (ames) where
 
 import Urbit.Prelude

@@ -1,7 +1,6 @@
 {-|
     Use etherium to access PKI information.
 -}
-
 module Urbit.Vere.Dawn where
 
 import Urbit.Arvo.Common

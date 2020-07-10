@@ -4,7 +4,6 @@
     TODO When making a request, handle the case where the request id is
     already in use.
 -}
-
 module Urbit.Vere.Http.Client where
 
 import Urbit.Arvo            (BlipEv(..), Ev(..), HttpClientEf(..),

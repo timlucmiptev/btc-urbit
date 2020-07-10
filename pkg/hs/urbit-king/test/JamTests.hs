@@ -1,5 +1,4 @@
 {-# LANGUAGE TemplateHaskell #-}
-
 module JamTests (tests) where
 
 import Urbit.Arvo.Event

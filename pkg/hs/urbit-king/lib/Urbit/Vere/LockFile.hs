@@ -1,7 +1,6 @@
 {-|
     Acquire and release the vere lockfile.
 -}
-
 module Urbit.Vere.LockFile (lockFile) where
 
 import Urbit.Prelude

@@ -3,7 +3,6 @@
          architecture with a single Urbit daemon running multiple
          ships. Do it or strip it out.
 -}
-
 module Urbit.King.API (King(..), kingAPI, readPortsFile) where
 
 import RIO.Directory

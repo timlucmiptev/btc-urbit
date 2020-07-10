@@ -21,7 +21,6 @@
                             (status < 500) ? "missing" :
                             "hosed";
 -}
-
 module Urbit.Vere.Http.Server where
 
 import Data.Conduit

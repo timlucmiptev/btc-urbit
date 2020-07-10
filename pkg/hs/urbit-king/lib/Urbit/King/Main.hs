@@ -49,7 +49,6 @@
     - `Quiet`: TODO Just the `-q` flag?
     - `Hashless`: Don't use hashboard for jets.
 -}
-
 module Urbit.King.Main (main) where
 
 import Urbit.Prelude

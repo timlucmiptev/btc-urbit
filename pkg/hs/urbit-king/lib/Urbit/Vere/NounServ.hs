@@ -1,7 +1,6 @@
 {-|
     Use websockets to pass nouns between a client and server.
 -}
-
 module Urbit.Vere.NounServ
     ( Conn(..)
     , Server(..)

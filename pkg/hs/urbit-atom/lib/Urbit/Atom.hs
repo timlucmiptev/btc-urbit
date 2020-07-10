@@ -4,7 +4,6 @@
     Atom implementation with fast conversions between bytestrings
     and atoms.
 -}
-
 module Urbit.Atom
   ( Atom
   , atomBytes

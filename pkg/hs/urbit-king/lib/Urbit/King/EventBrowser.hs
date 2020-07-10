@@ -3,7 +3,6 @@
 
     TODO Handle CTRL-D
 -}
-
 module Urbit.King.EventBrowser (run) where
 
 import Urbit.Prelude

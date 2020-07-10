@@ -1,5 +1,4 @@
 {-# LANGUAGE TemplateHaskell #-}
-
 module HoonMapSetTests (tests) where
 
 import Urbit.Prelude hiding (encodeUtf8)

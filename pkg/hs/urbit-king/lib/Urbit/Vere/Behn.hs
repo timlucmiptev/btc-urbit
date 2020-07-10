@@ -1,7 +1,6 @@
 {-|
     Behn: Timer Driver
 -}
-
 module Urbit.Vere.Behn (behn) where
 
 import Urbit.Arvo            hiding (Behn)

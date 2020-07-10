@@ -3,7 +3,6 @@
 
     TODO Effects storage logic is messy.
 -}
-
 module Urbit.Vere.Log ( EventLog, identity, nextEv, lastEv
                       , new, existing
                       , streamEvents, appendEvents, trimEvents

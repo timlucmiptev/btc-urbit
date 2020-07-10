@@ -1,5 +1,4 @@
 {-# LANGUAGE CPP #-}
-
 module Urbit.Atom.Slow
   ( wordsAtom
   , atomWords

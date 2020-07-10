@@ -1,7 +1,6 @@
 {-|
     Low-Level Inferface for LMDB Event Log.
 -}
-
 module Urbit.Vere.LMDB where
 
 import Urbit.Prelude hiding (init)

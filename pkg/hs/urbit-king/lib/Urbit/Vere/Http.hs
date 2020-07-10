@@ -1,7 +1,6 @@
 {-|
     HTTP Driver
 -}
-
 module Urbit.Vere.Http where
 
 import ClassyPrelude
