@@ -1,5 +1,4 @@
-{-# OPTIONS_GHC -Werror -Wall #-}
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE ApplicativeDo #-}
 
 {-|
     Command line parsing.
@@ -12,6 +11,9 @@ import Options.Applicative.Help.Pretty
 
 import Data.Word          (Word16)
 import System.Environment (getProgName)
+
+import qualified Data.Version as Version
+import qualified Paths_urbit_king
 
 --------------------------------------------------------------------------------
 
@@ -100,11 +102,11 @@ data Cmd
 
 --------------------------------------------------------------------------------
 
-headNote :: String -> Doc
-headNote _version = string $ intercalate "\n"
+headNote :: Doc
+headNote = string $ intercalate "\n"
   [ "Urbit: a personal server operating function"
   , "https://urbit.org"
-  , "Version " <> VERSION_urbit_king
+  , "Version " <> version
   ]
 
 -- | TODO This needs to be updated.
@@ -125,6 +127,9 @@ footNote exe = string $ intercalate "\n"
 
 --------------------------------------------------------------------------------
 
+version :: String
+version = Version.showVersion Paths_urbit_king.version
+
 parseArgs :: IO Cmd
 parseArgs = do
     nm <- getProgName
@@ -135,7 +140,7 @@ parseArgs = do
 
     let o = info (cmd <**> helper)
               $ progDesc "Start an existing Urbit or boot a new one."
-             <> headerDoc (Just $ headNote "0.9001.0")
+             <> headerDoc (Just headNote)
              <> footerDoc (Just $ footNote nm)
              <> fullDesc
 
@@ -144,9 +149,7 @@ parseArgs = do
 --------------------------------------------------------------------------------
 
 defaultPillURL :: String
-defaultPillURL = "https://bootstrap.urbit.org/urbit-v" <> ver <> ".pill"
-  where
-    ver = VERSION_urbit_king
+defaultPillURL = "https://bootstrap.urbit.org/urbit-v" <> version <> ".pill"
 
 --------------------------------------------------------------------------------
 
@@ -318,16 +321,18 @@ runShip = do
     pure (CmdRun (Run{..}) o daemon)
 
 valPill :: Parser Bug
-valPill = do
-    bPillPath <- strArgument (metavar "PILL" <> help "Path to pill")
+valPill = ValidatePill <$> pillPath <*> printPill <*> printSeq
+  where
+    pillPath =
+        strArgument (metavar "PILL" <> help "Path to pill")
 
-    bPrintPil <- switch $ long "print-pill"
-                       <> help "Print pill"
+    printPill =
+        switch $ long "print-pill"
+              <> help "Print pill"
 
-    bPrintSeq <- switch $ long "print-boot"
-                       <> help "Print boot sequence"
-
-    pure ValidatePill{..}
+    printSeq =
+        switch $ long "print-boot"
+              <> help "Print boot sequence"
 
 keyfilePath :: Parser FilePath
 keyfilePath = strArgument (metavar "KEYFILE" <> help "Path to key file")
@@ -399,9 +404,7 @@ conCmd :: Parser Cmd
 conCmd = CmdCon <$> pierPath
 
 allFx :: Parser Bug
-allFx = do
-    bPierPath <- strArgument (metavar "PIER" <> help "Path to pier")
-    pure CollectAllFX{..}
+allFx = CollectAllFX <$> strArgument (metavar "PIER" <> help "Path to pier")
 
 cmd :: Parser Cmd
 cmd = subparser
