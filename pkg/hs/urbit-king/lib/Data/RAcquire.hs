@@ -4,8 +4,10 @@
 module Data.RAcquire
     ( MonadRIO (liftRIO)
     , MonadAcquire (liftAcquire)
+    , ReleaseType (..)
     , RAcquire
     , mkRAcquire
+    , mkRAcquireType
     , rwith
     ) where
 
