@@ -1,16 +1,9 @@
 {-|
     RAcquire = ReaderT e Acquire a
 -}
-module Data.RAcquire where
-{-
-    ( RAcquire (..)
-    , Allocated (..)
-    , with
-    , mkRAcquire
-    , ReleaseType (..)
-    , mkRAcquireType
+module Data.RAcquire
+    ( RAcquire 
     ) where
--}
 
 import Prelude
 
@@ -32,14 +25,13 @@ data ReleaseType
     = ReleaseEarly
     | ReleaseNormal
     | ReleaseException
-  deriving (Show, Read, Eq, Ord, Enum, Bounded, Typeable)
+  deriving (Show, Read, Eq, Ord, Enum, Bounded)
 
 data Allocated e a
     = Allocated !a !(ReleaseType -> RIO e ())
 
 newtype RAcquire e a
     = RAcquire ((forall b. RIO e b -> RIO e b) -> RIO e (Allocated e a))
-  deriving Typeable
 
 --------------------------------------------------------------------------------
 
@@ -76,8 +68,8 @@ instance Monad (RAcquire e) where
                                (runRIO env $ free1 rt)
 
 instance MonadReader e (RAcquire e) where
-    ask                    = liftRIO ask
-    local mod (RAcquire f) = RAcquire $ \restore -> local mod (f restore)
+    ask                  = liftRIO ask
+    local f (RAcquire g) = RAcquire $ \restore -> local f (g restore)
 
 --------------------------------------------------------------------------------
 
