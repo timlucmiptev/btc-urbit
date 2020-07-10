@@ -20,7 +20,6 @@ import GHC.Natural        (Natural)
 
 import qualified Urbit.Vere.Log as Log
 
-
 -- Sum Types -------------------------------------------------------------------
 
 data Nums = One | Two | TwentyTwo | NineHundredNintyNine
@@ -87,7 +86,6 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (Poly a b) where
                     , PRite <$> arbitrary
                     ]
 
-
 -- Utils -----------------------------------------------------------------------
 
 roundTrip :: forall a. (Eq a, ToNoun a, FromNoun a) => a -> Bool
@@ -103,7 +101,6 @@ nounEquiv cvt x =
         , Just y == throughNoun x
         ]
   where y = cvt x
-
 
 -- Sanity Checks ---------------------------------------------------------------
 
@@ -145,7 +142,6 @@ typePrefixSanity x = toNoun x == byHand x
       FooBarBob x          -> toNoun (Cord "bob", x)
       FooBarCharlie        -> toNoun (Cord "charlie")
 
-
 -- Strip Sum Prefixes ----------------------------------------------------------
 
 barZazBaz :: BarZaz -> Bool
@@ -157,7 +153,6 @@ fooBarBaz :: FooBar -> Bool
 fooBarBaz = nounEquiv $ \case FooBarQueenAlice x y -> QueenAlice x y
                               FooBarBob x          -> Bob x
                               FooBarCharlie        -> Charlie
-
 
 --------------------------------------------------------------------------------
 
@@ -178,7 +173,6 @@ tests =
     , testProperty "Prefix Test 1"               $ barZazBaz
     , testProperty "Prefix Test 2"               $ fooBarBaz
     ]
-
 
 -- Generate Arbitrary Values ---------------------------------------------------
 

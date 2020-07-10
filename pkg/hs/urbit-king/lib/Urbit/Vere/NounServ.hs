@@ -84,7 +84,6 @@ wsConn pre inp out wsc = do
          res <- atomically (waitCatchSTM writer <|> waitCatchSTM reader)
          logWarn $ displayShow (res :: Either SomeException ())
 
-
 --------------------------------------------------------------------------------
 
 wsClient :: forall i o e. (ToNoun o, FromNoun i, Show o, Show i, HasLogFunc e)
@@ -132,7 +131,6 @@ wsServer = do
         atomically $ closeTBMChan con
 
     pure $ Server (readTBMChan con) tid 9999
-
 
 -- Hacky Integration Test ------------------------------------------------------
 

@@ -41,7 +41,6 @@ import Urbit.Noun.Jam   (jam)
 import qualified Data.Char                as C
 import qualified Data.Text.Encoding       as T
 
-
 -- Noun ------------------------------------------------------------------------
 
 instance ToNoun Noun where
@@ -49,7 +48,6 @@ instance ToNoun Noun where
 
 instance FromNoun Noun where
   parseNoun = pure
-
 
 --- Atom -----------------------------------------------------------------------
 
@@ -61,7 +59,6 @@ instance FromNoun Atom where
     Atom a   -> pure a
     Cell _ _ -> fail "Expecting an atom, but got a cell"
 
-
 -- Void ------------------------------------------------------------------------
 
 instance ToNoun Void where
@@ -69,7 +66,6 @@ instance ToNoun Void where
 
 instance FromNoun Void where
   parseNoun _ = named "Void" $ fail "Can't produce void"
-
 
 -- Cord ------------------------------------------------------------------------
 
@@ -81,7 +77,6 @@ instance ToNoun Cord where
 
 instance FromNoun Cord where
   parseNoun = named "Cord" . fmap Cord . parseNounUtf8Atom
-
 
 -- Decimal Cords ---------------------------------------------------------------
 
@@ -97,7 +92,6 @@ instance FromNoun UD where
     readMay t & \case
       Nothing -> fail ("invalid decimal atom: " <> unpack (filter (/= '.') t))
       Just vl -> pure (UD vl)
-
 
 --------------------------------------------------------------------------------
 
@@ -130,7 +124,6 @@ convertFromU fetch prefix length = \case
     go (i, acc) (c   : cs) = do
         n <- fetch c
         go (i+1, acc+(length^i)*n) cs
-
 
 -- @uv
 newtype UV = UV { unUV :: Atom }
@@ -303,12 +296,10 @@ instance FromNoun Char where
       then pure (C# (chr# (word2Int# w)))
       else fail "Word is not a valid character."
 
-
 -- Tour ------------------------------------------------------------------------
 
 newtype Tour = Tour [Char]
   deriving newtype (Eq, Ord, Show, ToNoun, FromNoun)
-
 
 -- Double Jammed ---------------------------------------------------------------
 
@@ -325,7 +316,6 @@ instance FromNoun a => FromNoun (Jammed a) where
       Left err  -> fail (show err)
       Right res -> do
         Jammed <$> parseNoun res
-
 
 -- Atom or Cell ----------------------------------------------------------------
 
@@ -344,7 +334,6 @@ instance (FromNoun a, FromNoun c) => FromNoun (AtomCell a c) where
   parseNoun n = named "(,)" $ case n of
                                 Atom _   -> ACAtom <$> parseNoun n
                                 Cell _ _ -> ACCell <$> parseNoun n
-
 
 -- Lenient ---------------------------------------------------------------------
 
@@ -369,7 +358,6 @@ instance ToNoun a => ToNoun (Lenient a) where
   toNoun (FailParse n) = n -- trace ("LENIENT.ToNoun: " <> show n)
   toNoun (GoodParse x) = toNoun x
 
-
 -- Todo -- Debugging Hack ------------------------------------------------------
 
 newtype Todo a = Todo a
@@ -384,7 +372,6 @@ instance FromNoun a => FromNoun (Todo a) where
         Right x -> pure (Todo x)
         Left er -> fail (show er)
           -- traceM ("[TODO]: " <> show er <> "\n" <> ppShow n <> "\n")
-
 
 -- Nullable --------------------------------------------------------------------
 
@@ -407,7 +394,6 @@ instance FromNoun a => FromNoun (Nullable a) where
       (ACAtom ()) -> pure None
       (ACCell x)  -> pure (Some x)
 
-
 -- List ------------------------------------------------------------------------
 
 instance ToNoun a => ToNoun [a] where
@@ -422,7 +408,6 @@ instance FromNoun a => FromNoun [a] where
       Atom 0   -> pure []
       Atom _   -> fail "list terminated with non-null atom"
       Cell l r -> (:) <$> parseNoun l <*> parseNoun r
-
 
 -- Tape ------------------------------------------------------------------------
 
@@ -442,7 +427,6 @@ instance FromNoun Tape where
         Left err -> fail (show err)
         Right tx -> pure (Tape tx)
 
-
 -- Wain -- List of Lines -------------------------------------------------------
 
 newtype Wain = Wain { unWain :: Text }
@@ -456,11 +440,9 @@ instance FromNoun Wain where
     tx :: [Cord] <- parseNoun n
     pure $ Wain $ unlines (unCord <$> tx)
 
-
 -- Wall -- Text Lines ----------------------------------------------------------
 
 type Wall = [Tape]
-
 
 -- Big Cord -- Don't Print -----------------------------------------------------
 
@@ -470,7 +452,6 @@ newtype BigCord = BigCord Cord
 instance Show BigCord where
   show (BigCord (Cord t)) = show (take 32 t <> "...")
 
-
 -- Big Tape -- Don't Print -----------------------------------------------------
 
 newtype BigTape = BigTape Tape
@@ -478,7 +459,6 @@ newtype BigTape = BigTape Tape
 
 instance Show BigTape where
   show (BigTape (Tape t)) = show (take 32 t <> "...")
-
 
 -- Bytes -----------------------------------------------------------------------
 
@@ -490,7 +470,6 @@ instance ToNoun Bytes where
 
 instance FromNoun Bytes where
     parseNoun = named "Bytes" . fmap (MkBytes . atomBytes) . parseNoun
-
 
 -- Octs ------------------------------------------------------------------------
 
@@ -516,7 +495,6 @@ instance FromNoun Octs where
         word2Int :: Word -> Int
         word2Int = fromIntegral
 
-
 -- File Contents -- Don't Print ------------------------------------------------
 
 newtype File = File { unFile :: Octs }
@@ -524,7 +502,6 @@ newtype File = File { unFile :: Octs }
 
 instance Show File where
   show (File (Octs bs)) = show (take 32 bs <> "...")
-
 
 -- Knot ------------------------------------------------------------------------
 
@@ -543,7 +520,6 @@ instance FromNoun Knot where
     if all C.isAscii txt
       then pure (MkKnot txt)
       else fail ("Non-ASCII chars in knot: " <> unpack txt)
-
 
 -- Term ------------------------------------------------------------------------
 
@@ -568,12 +544,10 @@ instance FromNoun Term where -- XX TODO
       then pure (MkTerm t)
       else fail ("Term not valid symbol: " <> unpack t)
 
-
 -- Ship ------------------------------------------------------------------------
 
 newtype Ship = Ship Word128 -- @p
   deriving newtype (Eq, Ord, Show, Enum, Real, Integral, Num, ToNoun, FromNoun)
-
 
 -- Path ------------------------------------------------------------------------
 
@@ -618,7 +592,6 @@ filePathToPath fp = Path path
 newtype Mug = Mug Word32
   deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun)
 
-
 -- Bool ------------------------------------------------------------------------
 
 instance ToNoun Bool where
@@ -634,7 +607,6 @@ instance FromNoun Bool where
           1         -> pure False
           _         -> fail "Atom is not a valid loobean"
 
-
 -- Integer ---------------------------------------------------------------------
 
 instance ToNoun Integer where
@@ -645,7 +617,6 @@ instance FromNoun Integer where
       where
         natInt :: Natural -> Integer
         natInt = fromIntegral
-
 
 -- Words -----------------------------------------------------------------------
 
@@ -678,7 +649,6 @@ instance FromNoun Word64  where parseNoun = named "Word64"  . nounToWord
 instance FromNoun Word128 where parseNoun = named "Word128" . nounToWord
 instance FromNoun Word256 where parseNoun = named "Word256" . nounToWord
 instance FromNoun Word512 where parseNoun = named "Word512" . nounToWord
-
 
 -- Maybe is `unit` -------------------------------------------------------------
 
@@ -726,7 +696,6 @@ instance FromNoun () where
 
 instance (ToNoun a, ToNoun b) => ToNoun (a, b) where
     toNoun (x, y) = Cell (toNoun x) (toNoun y)
-
 
 shortRec :: Word -> Parser a
 shortRec 0 = fail "expected a record, but got an atom"
@@ -867,7 +836,6 @@ instance ( FromNoun a, FromNoun b, FromNoun c, FromNoun d, FromNoun e
     (p, tail)                   <- parseNoun n
     (q, r, s, t, u, v, w, x, y) <- parseNoun tail
     pure (p, q, r, s, t, u, v, w, x, y)
-
 
 -- Ugg -------------------------------------------------------------------------
 

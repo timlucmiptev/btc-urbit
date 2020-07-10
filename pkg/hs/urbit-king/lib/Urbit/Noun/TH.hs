@@ -14,7 +14,6 @@ import Urbit.Noun.Core (textToUtf8Atom)
 
 import qualified Data.Char as C
 
-
 --------------------------------------------------------------------------------
 
 type ConInfo = (Name, [Type])

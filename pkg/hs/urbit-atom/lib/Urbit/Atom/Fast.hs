@@ -53,7 +53,6 @@ import qualified Foreign.ForeignPtr        as Ptr
 import qualified Foreign.ForeignPtr.Unsafe as Ptr
 import qualified GHC.Integer.GMP.Internals as G
 
-
 -- Setup BIT and BYT macros. ---------------------------------------------------
 
 #include <MachDeps.h>
@@ -73,7 +72,6 @@ bit = BIT
 
 byt :: Word
 byt = BYT
-
 
 --------------------------------------------------------------------------------
 
@@ -103,7 +101,6 @@ atomBitWidth a = fromIntegral (W# (atomBitWidth# a))
 takeBitsWord :: Int -> Word -> Word
 takeBitsWord wid wor = wor .&. (shiftL 1 wid - 1)
 
-
 --------------------------------------------------------------------------------
 
 {-
@@ -116,7 +113,6 @@ instance Eq Pill where
 
 instance Show Pill where
   show = show . pillBytes
-
 
 --------------------------------------------------------------------------------
 
@@ -133,7 +129,6 @@ pillBytes = strip . unPill
 
 bytesPill :: ByteString -> Pill
 bytesPill = Pill . strip
-
 
 --------------------------------------------------------------------------------
 
@@ -178,7 +173,6 @@ _wordsBigNat v = case VP.length v of
   extract (Vector _ (I# len) (Prim.ByteArray buf)) =
     G.byteArrayToBigNat# buf len
 
-
 --------------------------------------------------------------------------------
 
 -- | Cast a nat to a vector (no copy)
@@ -201,7 +195,6 @@ bigNatNat bn = case G.sizeofBigNat# bn of
   1# -> NatS# (G.bigNatToWord bn)
   _  -> NatJ# bn
 
-
 --------------------------------------------------------------------------------
 
 _wordBytes :: Word -> ByteString
@@ -218,7 +211,6 @@ bytesFirstWord buf = go 0 0
   go acc idx =
     if idx >= top then acc else go (acc .|. i idx (BYT * idx)) (idx + 1)
 
-
 --------------------------------------------------------------------------------
 
 _pillWords :: Pill -> Vector Word
@@ -226,7 +218,6 @@ _pillWords = bsToWords . pillBytes
 
 wordsPill :: Vector Word -> Pill
 wordsPill = bytesPill . vecBytes . wordsToBytes
-
 
 --------------------------------------------------------------------------------
 
@@ -236,7 +227,6 @@ wordsToBytes (Vector off sz buf) = Vector (off * BYT) (sz * BYT) buf
 bsToWords :: ByteString -> Vector Word
 bsToWords bs = VP.generate (1 + BS.length bs `div` BYT)
   $ \i -> bytesFirstWord (BS.drop (i * BYT) bs)
-
 
 --------------------------------------------------------------------------------
 
@@ -257,7 +247,6 @@ vecBytes (Vector off sz buf) = unsafePerformIO $ do
 
 _bytesVec :: ByteString -> Vector Word8
 _bytesVec bs = VP.generate (BS.length bs) (BS.index bs)
-
 
 --------------------------------------------------------------------------------
 
@@ -323,7 +312,6 @@ stripBytes buf = BS.take (len - go 0 (len - 1)) buf
   go n i | i < 0                     = n
          | 0 == BS.unsafeIndex buf i = go (n + 1) (i - 1)
          | otherwise                 = n
-
 
 importBytes :: ByteString -> Natural
 importBytes = go . stripBytes

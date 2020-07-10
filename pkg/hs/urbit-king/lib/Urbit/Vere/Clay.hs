@@ -17,7 +17,6 @@ import qualified Data.Conduit.Combinators as CC
 import qualified Data.Map.Strict          as M
 import qualified Data.Set                 as S
 
-
 --------------------------------------------------------------------------------
 
 data ClayDrv = ClayDrv
@@ -178,7 +177,6 @@ clay king enqueueEv =
         pierPath <- view pierPathL
         removeDirectoryRecursive $ pierPath </> deskToPath desk
         atomically $ modifyTVar (cdMountPoints cd) (M.delete desk)
-
 
     -- Change the structures off of the event into something we can work with
     -- in Unix.

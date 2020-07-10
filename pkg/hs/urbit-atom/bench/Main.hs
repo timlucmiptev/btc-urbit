@@ -9,7 +9,6 @@ import Urbit.Atom      (Atom)
 import qualified Urbit.Atom.Fast as Fast
 import qualified Urbit.Atom.Slow as Slow
 
-
 -- Examples --------------------------------------------------------------------
 
 a64, a32768 :: Atom
@@ -19,7 +18,6 @@ a32768 = (2^32768)-1
 bDog, bBigDog :: ByteString
 bDog    = "The quick brown fox jumps over the lazy dog."
 bBigDog = mconcat (replicate 800 bDog)
-
 
 -- Benchmarks ------------------------------------------------------------------
 

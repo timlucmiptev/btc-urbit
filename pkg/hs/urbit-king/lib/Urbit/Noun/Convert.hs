@@ -16,11 +16,9 @@ import Urbit.Noun.Core
 
 import qualified Control.Monad.Fail as Fail
 
-
 -- Types -----------------------------------------------------------------------
 
 type ParseStack = [Text]
-
 
 -- IResult ---------------------------------------------------------------------
 
@@ -55,7 +53,6 @@ instance Semigroup (IResult a) where
 instance Monoid (IResult a) where
     mempty  = fail "mempty"
     mappend = (<>)
-
 
 -- Result ----------------------------------------------------------------------
 
@@ -92,7 +89,6 @@ instance Semigroup (Result a) where
 instance Monoid (Result a) where
     mempty  = fail "mempty"
     mappend = (<>)
-
 
 -- "Parser" --------------------------------------------------------------------
 
@@ -145,7 +141,6 @@ instance Monoid (Parser a) where
     mempty  = fail "mempty"
     mappend = (<>)
 
-
 -- Conversion ------------------------------------------------------------------
 
 class FromNoun a where
@@ -187,7 +182,6 @@ fromNounExn n = runParser (parseNoun n) [] onFail onSuccess
   where
     onFail p m  = throwIO (BadNoun p m)
     onSuccess x = pure x
-
 
 -- Cord Conversions ------------------------------------------------------------
 

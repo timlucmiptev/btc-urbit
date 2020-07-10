@@ -32,7 +32,6 @@ data AmesDrv = AmesDrv
 data NetworkMode = Fake | Localhost | Real | NoNetwork
   deriving (Eq, Ord, Show)
 
-
 -- Utils -----------------------------------------------------------------------
 
 galaxyPort :: NetworkMode -> Galaxy -> PortNumber
@@ -78,7 +77,6 @@ _turfText = intercalate "." . reverse . fmap unCord . unTurf
 
 renderGalaxy :: Galaxy -> Text
 renderGalaxy = Ob.renderPatp . Ob.patp . fromIntegral . unPatp
-
 
 --------------------------------------------------------------------------------
 
@@ -179,7 +177,6 @@ ames inst who isFake enqueueEv stderr =
                     _                -> pure ()
 
             waitPacket socketVar
-
 
     handleEffect :: AmesDrv -> NewtEf -> RIO e ()
     handleEffect drv@AmesDrv{..} = \case

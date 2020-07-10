@@ -25,7 +25,6 @@ import Urbit.King.App     (runApp)
 import qualified Urbit.Time     as Time
 import qualified Urbit.Vere.Log as Log
 
-
 --------------------------------------------------------------------------------
 
 king :: KingId
@@ -42,7 +41,6 @@ timerFires = forAll arbitrary (ioProperty . runApp . runTest)
         cb (BehnEfDoze (king, ()) (Just (2^20)))
         t <- atomically $ readTQueue q
         pure True
-
 
 -- Utils -----------------------------------------------------------------------
 

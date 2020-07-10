@@ -22,7 +22,6 @@ import qualified Network.WebSockets             as WS
 import qualified Urbit.Vere.NounServ            as NounServ
 import qualified Urbit.Vere.Term.API            as Term
 
-
 -- Types -----------------------------------------------------------------------
 
 type TermConn = NounServ.Conn Belt [Term.Ev]
@@ -36,7 +35,6 @@ data King = King
     { kServer   :: Async ()
     , kTermConn :: TermConnAPI
     }
-
 
 --------------------------------------------------------------------------------
 

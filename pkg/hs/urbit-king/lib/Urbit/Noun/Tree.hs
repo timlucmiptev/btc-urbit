@@ -22,7 +22,6 @@ import Data.Bits        (shiftR, xor)
 import Data.Hash.Murmur (murmur3)
 import GHC.Natural      (Natural)
 
-
 -- Types -----------------------------------------------------------------------
 
 data NounVal a = NounVal
@@ -47,7 +46,6 @@ newtype HoonSet a = HoonSet { unHoonSet :: HoonTree a }
 
 newtype HoonMap k v = HoonMap { unHoonMap :: HoonTree (k, v) }
   deriving newtype (Eq, Ord, Show, FromNoun, ToNoun)
-
 
 -- Instances -------------------------------------------------------------------
 
@@ -75,7 +73,6 @@ instance FromNoun a => FromNoun (HoonTree a) where
     parseNoun n     = Node <$> parseNoun n
 
 deriveNoun ''HoonTreeNode
-
 
 -- Mug -------------------------------------------------------------------------
 
@@ -137,7 +134,6 @@ met bloq = go 0
 mug :: Noun -> Nat
 mug = slowMug
 
-
 -- Order -----------------------------------------------------------------------
 
 {-
@@ -172,7 +168,6 @@ gor a b = if c==d then dor a b else c<d
 morVal, gorVal :: NounVal a -> NounVal a -> Bool
 morVal = on mor non
 gorVal = on gor non
-
 
 --------------------------------------------------------------------------------
 

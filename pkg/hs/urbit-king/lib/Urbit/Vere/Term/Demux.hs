@@ -14,7 +14,6 @@ import Urbit.Vere.Term.API (Client(Client))
 import qualified Urbit.Vere.Term.API   as Term
 import qualified Urbit.Vere.Term.Logic as Logic
 
-
 -- External --------------------------------------------------------------------
 
 data KeyedSet a = KeyedSet
@@ -56,7 +55,6 @@ addDemux conn Demux{..} = do
 
 useDemux :: Demux -> Client
 useDemux d = Client { give = dGive d, take = dTake d }
-
 
 -- Internal --------------------------------------------------------------------
 

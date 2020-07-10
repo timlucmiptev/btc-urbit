@@ -20,7 +20,6 @@
     - `king full-replay PIER`: Replays the whole event log events, print
       any failures. On success, replace the snapshot.
 
-
     # Full Replay -- An Integration Test
 
     - Copy the event log:
@@ -118,7 +117,6 @@ toSerfFlags CLI.Opts{..} = catMaybes m
         ]
     from True flag = Just flag
     from False _   = Nothing
-
 
 toPierConfig :: FilePath -> CLI.Opts -> PierConfig
 toPierConfig pierPath CLI.Opts {..} = PierConfig { .. }
@@ -476,7 +474,6 @@ newShip CLI.New{..} opts
         tryBootFromPill True pill nLite flags ship bootEvent
 ------  tryBootFromPill (CLI.oExit opts) pill nLite flags ship bootEvent
 
-
 runShip :: CLI.Run -> CLI.Opts -> Bool -> IO ()
 runShip (CLI.Run pierPath) opts daemon = do
     tid <- myThreadId
@@ -501,7 +498,6 @@ runShip (CLI.Run pierPath) opts daemon = do
     pierConfig = toPierConfig pierPath opts
     networkConfig = toNetworkConfig opts
 
-
 startBrowser :: HasLogFunc e => FilePath -> RIO e ()
 startBrowser pierPath = runRAcquire $ do
     -- lockFile pierPath
@@ -525,7 +521,6 @@ checkDawn keyfilePath = do
 
   e <- dawnVent seed
   print $ show e
-
 
 checkComet :: HasLogFunc e => RIO e ()
 checkComet = do
@@ -560,7 +555,6 @@ main = do
         CLI.CmdBug (CLI.CheckDawn pax)          -> runApp $ checkDawn pax
         CLI.CmdBug CLI.CheckComet               -> runApp $ checkComet
         CLI.CmdCon pier                         -> runAppLogFile $ connTerm pier
-
 
 --------------------------------------------------------------------------------
 
@@ -598,7 +592,6 @@ tryParseFXStream = loop
             n <- liftIO (cueBSExn bs)
             fromNounErr n & either (logError . displayShow) pure
             loop
-
 
 {-
 tryCopyLog :: IO ()

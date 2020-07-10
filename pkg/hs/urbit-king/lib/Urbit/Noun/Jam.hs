@@ -29,7 +29,6 @@ import qualified Data.ByteString.Unsafe as BS
 import qualified Data.HashTable.IO      as H
 import qualified Data.Vector.Primitive  as VP
 
-
 -- Exports ---------------------------------------------------------------------
 
 jamBS :: Noun -> ByteString
@@ -39,7 +38,6 @@ jamBS n = doPut bt sz (writeNoun n)
 
 jam :: Noun -> Atom
 jam = bytesAtom . jamBS
-
 
 -- Types -----------------------------------------------------------------------
 
@@ -199,7 +197,6 @@ writeAtomBits :: Atom -> Put ()
 writeAtomBits = \case NatS# wd -> writeAtomWord# wd
                       NatJ# bn -> writeAtomBigNat bn
 
-
 -- Put Instances ---------------------------------------------------------------
 
 instance Functor Put where
@@ -235,7 +232,6 @@ instance Monad Put where
         runPut (f x') tbl s'
     {-# INLINE (>>=) #-}
 
-
 --------------------------------------------------------------------------------
 
 doPut :: H.CuckooHashTable Word Word -> Word -> Put () -> ByteString
@@ -254,7 +250,6 @@ doPut !tbl !sz m =
     mbFlush = do
       shouldFlush <- (/= 0) . off <$> getS
       when shouldFlush flush
-
 
 --------------------------------------------------------------------------------
 
@@ -300,7 +295,6 @@ writeBackRef !a = do
     writeBit True
     writeBit True
     writeMat (fromIntegral a)
-
 
 -- Calculate Jam Size and Backrefs ---------------------------------------------
 

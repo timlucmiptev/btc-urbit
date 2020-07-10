@@ -46,7 +46,6 @@ import qualified Network.Wai.Conduit         as W
 import qualified Network.Wai.Handler.Warp    as W
 import qualified Network.Wai.Handler.WarpTLS as W
 
-
 -- Internal Types --------------------------------------------------------------
 
 type HasShipEnv e = (HasLogFunc e, HasNetworkConfig e, HasPierConfig e)
@@ -102,7 +101,6 @@ data Serv = Serv
     , sLiveReqs  :: TVar LiveReqs
     }
 
-
 -- RespAction -- Reorganized HttpEvent for Cleaner Processing ------------------
 
 reorgHttpEvent :: HttpEvent -> [RespAction]
@@ -112,7 +110,6 @@ reorgHttpEvent = \case
     Cancel ()              -> [RADone]
     Continue mBlk isDone   -> toList (RABloc <$> mBlk)
                            <> if isDone then [RADone] else []
-
 
 -- Generic Service Stop/Restart -- Using an MVar for Atomicity -----------------
 
@@ -162,7 +159,6 @@ stopService vServ kkill = do
         Just sv -> do res <- try (kkill sv)
                       pure (Nothing, res)
 
-
 -- Live Requests Table -- All Requests Still Waiting for Responses -------------
 
 emptyLiveReqs :: LiveReqs
@@ -191,7 +187,6 @@ newLiveReq var = do
 
     pure (nex, tmv)
 
-
 -- Ports File ------------------------------------------------------------------
 
 removePortsFile :: FilePath -> RIO e ()
@@ -210,7 +205,6 @@ portsFileText Ports{..} =
 
 writePortsFile :: FilePath -> Ports -> RIO e ()
 writePortsFile f = writeFile f . encodeUtf8 . portsFileText
-
 
 -- Random Helpers --------------------------------------------------------------
 
@@ -259,7 +253,6 @@ mkIpv6 (p, q, r, s) = Ipv6 (pBits .|. qBits .|. rBits .|. sBits)
 reqUrl :: W.Request -> Cord
 reqUrl r = Cord $ decodeUtf8 $ W.rawPathInfo r <> W.rawQueryString r
 
-
 -- Utilities for Constructing Events -------------------------------------------
 
 data WhichServer = Secure | Insecure | Loopback
@@ -289,7 +282,6 @@ reqEv sId reqId which addr req =
         _        ->
             servEv $ HttpServerEvRequest (sId, reqId, 1, ())
                    $ HttpServerReq (which == Secure) addr req
-
 
 -- Http Server Flows -----------------------------------------------------------
 
@@ -389,7 +381,6 @@ app env sId liv plan which req respond =
             io $ atomically $ plan (cancelEv sId reqId)
             logError $ display ("Exception during request" <> tshow exn)
             throwIO (exn :: SomeException)
-
 
 -- Top-Level Driver Interface --------------------------------------------------
 

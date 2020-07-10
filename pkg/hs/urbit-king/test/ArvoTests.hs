@@ -22,7 +22,6 @@ import Network.Socket     (tupleToHostAddress)
 
 import qualified Urbit.Vere.Log as Log
 
-
 -- Utils -----------------------------------------------------------------------
 
 roundTrip :: forall a. (Eq a, ToNoun a, FromNoun a) => a -> Bool
@@ -53,7 +52,6 @@ tests =
     , testProperty "Round Trip AmesDest" (roundTrip @AmesDest)
     , testProperty "Basic Event Sanity" eventSanity
     ]
-
 
 -- Arbitrary Instances ---------------------------------------------------------
 
@@ -157,7 +155,6 @@ instance Arbitrary Header where
 
 instance Arbitrary BigCord where
   arbitrary = BigCord <$> arb
-
 
 instance Arbitrary ServId where arbitrary = ServId <$> arb
 

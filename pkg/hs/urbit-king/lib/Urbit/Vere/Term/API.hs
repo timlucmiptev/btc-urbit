@@ -9,7 +9,6 @@ import Urbit.Prelude hiding (trace)
 
 import Urbit.Arvo (Belt, Blit)
 
-
 -- External Types --------------------------------------------------------------
 
 {-|
@@ -32,7 +31,6 @@ data Client = Client
     }
 
 deriveNoun ''Ev
-
 
 -- Utilities -------------------------------------------------------------------
 

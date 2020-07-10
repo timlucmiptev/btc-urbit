@@ -14,7 +14,6 @@ import Urbit.Timer (Timer)
 import qualified Urbit.Time  as Time
 import qualified Urbit.Timer as Timer
 
-
 -- Behn Stuff ------------------------------------------------------------------
 
 bornEv :: KingId -> Ev

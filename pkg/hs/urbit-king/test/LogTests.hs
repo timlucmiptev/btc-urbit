@@ -18,7 +18,6 @@ import Urbit.King.App     (App, runApp)
 
 import qualified Urbit.Vere.Log as Log
 
-
 -- Utils -----------------------------------------------------------------------
 
 withTestDir :: (FilePath -> RIO e a) -> RIO e a
@@ -32,7 +31,6 @@ instance Exception NotEqual where
 assertEqual :: MonadIO m => (Show a, Eq a) => a -> a -> m ()
 assertEqual x y = do
     unless (x == y) $ io $ throwIO $ NotEqual (show x) (show y)
-
 
 -- Database Operations ---------------------------------------------------------
 
@@ -139,7 +137,6 @@ tryAppendHuge = forAll arbitrary (ioProperty . runApp . runTest)
                     readDb log >>= assertEqual db'
         pure True
 
-
 tests :: TestTree
 tests =
   testGroup "Log"
@@ -159,7 +156,6 @@ tests =
           testProperty "Append Huge Events" $
               tryAppendHuge
     ]
-
 
 -- Generate Arbitrary Values ---------------------------------------------------
 

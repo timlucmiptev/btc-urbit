@@ -24,7 +24,6 @@ import Foreign.Storable (peek, poke, sizeOf)
 import qualified Data.ByteString.Unsafe as BU
 import qualified Data.Vector            as V
 
-
 -- Types -----------------------------------------------------------------------
 
 type Env = MDB_env
@@ -58,11 +57,9 @@ data EventLogExn
     | BadWriteEffect EventId
   deriving Show
 
-
 -- Instances -------------------------------------------------------------------
 
 instance Exception EventLogExn where
-
 
 -- Open/Close an Event Log -----------------------------------------------------
 
@@ -115,7 +112,6 @@ close dir (EventLog env meta events effects _ _) = do
             mdb_env_sync_flush env
             mdb_env_close env
 
-
 -- Create a new event log or open an existing one. -----------------------------
 
 existing :: HasLogFunc e => FilePath -> RAcquire e EventLog
@@ -123,7 +119,6 @@ existing dir = mkRAcquire (open dir) (close dir)
 
 new :: HasLogFunc e => FilePath -> LogIdentity -> RAcquire e EventLog
 new dir id = mkRAcquire (create dir id) (close dir)
-
 
 -- Read/Write Log Identity -----------------------------------------------------
 
@@ -199,7 +194,6 @@ writeIdent env metaTbl ident@LogIdentity{..} = do
         unless (x && y && z) $ do
             throwIO (BadWriteLogIdentity ident)
 
-
 -- Latest Event Number ---------------------------------------------------------
 
 getNumEvents :: Env -> Dbi -> RIO e Word64
@@ -210,7 +204,6 @@ getNumEvents env eventsTbl =
     io $ mdb_cursor_get MDB_LAST cur pKey pVal >>= \case
         False -> pure 0
         True  -> peek pKey >>= mdbValToWord64
-
 
 -- Write Events ----------------------------------------------------------------
 
@@ -248,7 +241,6 @@ writeEffectsRow log k v = do
             False -> throwIO (BadWriteEffect k)
   where
     flags = compileWriteFlags []
-
 
 -- Read Events -----------------------------------------------------------------
 
@@ -349,7 +341,6 @@ readRowsBatch env dbi first = readRows
             False -> pure $ Just ((key, val), 0)
             True  -> pure $ Just ((key, val), pred n)
 
-
 -- Utils -----------------------------------------------------------------------
 
 withKVPtrs' :: (MonadIO m, MonadUnliftIO m)
@@ -392,7 +383,6 @@ withWordPtr :: (MonadIO m, MonadUnliftIO m)
 withWordPtr w cb =
     withRunInIO $ \run ->
         allocaBytes (sizeOf w) (\p -> poke p w >> run (cb p))
-
 
 -- Lower-Level Operations ------------------------------------------------------
 

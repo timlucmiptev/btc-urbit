@@ -19,7 +19,6 @@ import Urbit.Prelude hiding (Term)
 import qualified Network.HTTP.Types.Method as H
 import qualified Urbit.Ob                  as Ob
 
-
 -- Misc Types ------------------------------------------------------------------
 
 {-|
@@ -35,7 +34,6 @@ newtype KingId = KingId { unKingId :: UV }
 
 newtype ServId = ServId { unServId :: UV }
   deriving newtype (Eq, Ord, Show, Num, Enum, Integral, Real, FromNoun, ToNoun)
-
 
 -- Http Common -----------------------------------------------------------------
 
@@ -58,7 +56,6 @@ deriveNoun ''ResponseHeader
 deriveNoun ''Header
 deriveNoun ''HttpEvent
 
-
 -- Http Requests ---------------------------------------------------------------
 
 type Method = H.StdMethod
@@ -75,8 +72,6 @@ instance FromNoun H.StdMethod where
     case H.parseMethod bs of
       Left md -> fail ("Unexpected method: " <> unpack (decodeUtf8 md))
       Right m -> pure m
-
-
 
 -- Http Server Configuration ---------------------------------------------------
 
@@ -96,7 +91,6 @@ data HttpServerConf = HttpServerConf
 
 deriveNoun ''HttpServerConf
 
-
 -- Desk and Mime ---------------------------------------------------------------
 
 newtype Desk = Desk { unDesk :: Cord }
@@ -106,7 +100,6 @@ data Mime = Mime Path File
   deriving (Eq, Ord, Show)
 
 deriveNoun ''Mime
-
 
 -- Json ------------------------------------------------------------------------
 
@@ -121,7 +114,6 @@ data JsonNode
   deriving (Eq, Ord, Show)
 
 deriveNoun ''JsonNode
-
 
 -- Ames Destinations -------------------------------------------------
 
@@ -153,7 +145,6 @@ data AmesAddress
 deriveNoun ''AmesAddress
 
 type AmesDest = Each Galaxy (Jammed AmesAddress)
-
 
 -- Path+Tagged Restructuring ---------------------------------------------------
 

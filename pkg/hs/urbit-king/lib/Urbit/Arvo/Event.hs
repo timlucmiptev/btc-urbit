@@ -26,7 +26,6 @@ type Life = Word -- Number of Azimoth key revs.
 type Bloq = Atom -- TODO
 type Oath = Atom -- Signature
 
-
 -- Parsed URLs -----------------------------------------------------------------
 
 type Host = Each Turf Ipv4
@@ -38,7 +37,6 @@ data PUrl = PUrl Hart Pork Quay
   deriving (Eq, Ord, Show)
 
 deriveNoun ''PUrl
-
 
 -- Dawn Records ----------------------------------------------------------------
 
@@ -143,7 +141,6 @@ deriveNoun ''EthPoint
 deriveNoun ''Seed
 deriveNoun ''Dawn
 
-
 -- HTTP ------------------------------------------------------------------------
 
 type ServerId = Atom
@@ -190,7 +187,6 @@ deriveNoun ''HttpRequest
 deriveNoun ''HttpServerEv
 deriveNoun ''HttpServerReq
 
-
 -- Ames ------------------------------------------------------------------------
 
 data AmesEv
@@ -200,7 +196,6 @@ data AmesEv
   deriving (Eq, Ord, Show)
 
 deriveNoun ''AmesEv
-
 
 -- Arvo Events -----------------------------------------------------------------
 
@@ -214,7 +209,6 @@ data ArvoEv
 
 deriveNoun ''ArvoEv
 
-
 -- Boat Events -----------------------------------------------------------------
 
 data BoatEv
@@ -223,7 +217,6 @@ data BoatEv
   deriving (Eq, Ord, Show)
 
 deriveNoun ''BoatEv
-
 
 -- Timer Events ----------------------------------------------------------------
 
@@ -235,7 +228,6 @@ data BehnEv
 
 deriveNoun ''BehnEv
 
-
 -- Newt Events -----------------------------------------------------------------
 
 data NewtEv
@@ -245,7 +237,6 @@ data NewtEv
 
 deriveNoun ''NewtEv
 
-
 -- FileSystem Events -----------------------------------------------------------
 
 data SyncEv
@@ -254,7 +245,6 @@ data SyncEv
   deriving (Eq, Ord, Show)
 
 deriveNoun ''SyncEv
-
 
 -- Terminal Events -------------------------------------------------------------
 
@@ -289,7 +279,6 @@ deriveNoun ''ArrowKey
 deriveNoun ''Belt
 deriveNoun ''TermEv
 
-
 -- Events for Device Drivers ---------------------------------------------------
 
 data BlipEv
@@ -305,7 +294,6 @@ data BlipEv
   deriving (Eq, Show)
 
 deriveNoun ''BlipEv
-
 
 -- Boot Events -----------------------------------------------------------------
 
@@ -332,7 +320,6 @@ deriveNoun ''Vane
 deriveNoun ''VaneName
 deriveNoun ''VaneEv
 deriveNoun ''ZuseEv
-
 
 -- The Main Event Type ---------------------------------------------------------
 

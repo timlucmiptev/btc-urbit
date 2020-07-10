@@ -1,6 +1,5 @@
 {-# OPTIONS_GHC -Wno-deprecations #-}
 
-
 module Main (main) where
 
 --------------------------------------------------------------------------------
@@ -22,7 +21,6 @@ import qualified Data.Vector.Primitive  as VP
 import qualified Urbit.Atom.Fast        as F
 import qualified Urbit.Atom.Slow        as S
 
-
 -- Instances -------------------------------------------------------------------
 
 instance Arbitrary Natural where
@@ -33,7 +31,6 @@ instance Arbitrary ByteString where
 
 instance (Prim a, Arbitrary a) => Arbitrary (Vector a) where
   arbitrary = VP.fromList <$> arbitrary
-
 
 -- Utils -----------------------------------------------------------------------
 
@@ -59,7 +56,6 @@ dumpLoad dump load x = x == load (dump x)
 loadDump :: Eq o => (o -> i) -> (i -> o) -> (o -> o) -> (o -> Bool)
 loadDump load dump norm x = norm x == dump (load x)
 
-
 -- Test Reference Implementation -----------------------------------------------
 
 prop_atom_bytes_roundtrip :: Natural -> Bool
@@ -74,7 +70,6 @@ prop_bytes_atom_roundtrip = loadDump S.bytesAtom S.atomBytes stripBytes
 prop_words_atom_roundtrip :: Vector Word -> Bool
 prop_words_atom_roundtrip = loadDump S.wordsAtom S.atomWords stripWords
 
-
 -- Test Fast Implementation ----------------------------------------------------
 
 prop_fast_atom_bytes_roundtrip :: Natural -> Bool
@@ -88,7 +83,6 @@ prop_fast_bytes_atom_roundtrip = loadDump F.bytesAtom F.atomBytes stripBytes
 
 prop_fast_words_atom_roundtrip :: Vector Word -> Bool
 prop_fast_words_atom_roundtrip = loadDump F.wordsAtom F.atomWords stripWords
-
 
 -- Fast and Reference Implementations are the Same -----------------------------
 
@@ -109,7 +103,6 @@ prop_fast_atom_bytes_correct x = F.atomBytes x == S.atomBytes x
 
 prop_fast_atom_export_correct :: Natural -> Bool
 prop_fast_atom_export_correct x = F.exportBytes x == S.atomBytes x
-
 
 --------------------------------------------------------------------------------
 

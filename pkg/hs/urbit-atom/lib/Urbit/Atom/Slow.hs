@@ -21,7 +21,6 @@ import Data.Vector.Primitive (Vector)
 import qualified Data.ByteString       as BS
 import qualified Data.Vector.Primitive as VP
 
-
 -- Setup BIT and BYT macros. ---------------------------------------------------
 
 #include <MachDeps.h>
@@ -42,7 +41,6 @@ bit = BIT
 byt :: Word
 byt = BYT
 
-
 --------------------------------------------------------------------------------
 
 {-|
@@ -62,7 +60,6 @@ bytesAtom = BS.foldr' go 0
  where
   go :: Word8 -> Natural -> Natural
   go byt' acc = shiftL acc 8 .|. fromIntegral byt'
-
 
 --------------------------------------------------------------------------------
 

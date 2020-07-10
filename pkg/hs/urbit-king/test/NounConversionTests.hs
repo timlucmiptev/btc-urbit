@@ -43,20 +43,17 @@ instance Arbitrary KeyPair where
   arbitrary =
     (KeyPair . fromJust . Ed.createKeypairFromSeed_ . pack) <$> (vector 32)
 
-
 passRoundTrip :: KeyPair -> KeyPair -> Bool
 passRoundTrip (KeyPair (signPubkey, _)) (KeyPair (cryptPubkey, _)) =
     (Just p) == (fromNoun $ toNoun p)
   where
     p = Pass signPubkey cryptPubkey
 
-
 ringRoundTrip :: ThirtyTwoByteString -> ThirtyTwoByteString -> Bool
 ringRoundTrip (ThirtyTwoByteString signSeed) (ThirtyTwoByteString cryptSeed) =
     (Just r) == (fromNoun $ toNoun r)
   where
     r = Ring signSeed cryptSeed
-
 
 --------------------------------------------------------------------------------
 

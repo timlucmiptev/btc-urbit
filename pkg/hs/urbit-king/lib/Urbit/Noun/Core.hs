@@ -30,7 +30,6 @@ import Test.QuickCheck.Gen       (Gen, getSize, resize, scale)
 
 import qualified Data.Char as C
 
-
 -- Types -----------------------------------------------------------------------
 
 data Noun
@@ -46,7 +45,6 @@ pattern C x y <- NCell _ _ x y where C = mkCell
 pattern A a   <- NAtom _ a     where A = mkAtom
 
 {-# COMPLETE C, A #-}
-
 
 --------------------------------------------------------------------------------
 
@@ -117,7 +115,6 @@ instance Ord Noun where
               (Cell h1 t1, Cell h2 t2) -> compare h1 h2 <> compare t1 t2
   {-# INLINE compare #-}
 
-
 instance Arbitrary Noun where
   arbitrary = resize 1000 go
     where
@@ -158,7 +155,6 @@ mkCell h t = NCell has siz h t
   where
     siz = nounSize h + nounSize t
     has = hash h `combine` hash t
-
 
 -- Stolen from Hashable Library ------------------------------------------------
 

@@ -25,7 +25,6 @@ import qualified Data.ByteString.Unsafe as BS
 import qualified Data.HashTable.IO      as H
 import qualified Data.Vector.Primitive  as VP
 
-
 --------------------------------------------------------------------------------
 
 cueBS :: ByteString -> Either DecodeErr Noun
@@ -43,7 +42,6 @@ cue = cueBS . atomBytes
 cueExn :: MonadIO m => Atom -> m Noun
 cueExn = cueBSExn . atomBytes
 
-
 -- Debugging -------------------------------------------------------------------
 
 {-# INLINE debugM #-}
@@ -53,7 +51,6 @@ debugM _ = pure ()
 {-# INLINE debugMId #-}
 debugMId :: (Monad m, Show a) => String -> m a -> m a
 debugMId _ a = a
-
 
 -- Types -----------------------------------------------------------------------
 
@@ -320,7 +317,6 @@ dWordBits !n = do
   advance n
   debugM ("dWordBits: " <> show (takeLowBits n w))
   pure (takeLowBits n w)
-
 
 -- Fast Cue --------------------------------------------------------------------
 

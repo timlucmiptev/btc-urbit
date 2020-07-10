@@ -16,14 +16,12 @@ import ClassyPrelude
 import qualified System.Console.Terminal.Size as TSize
 import qualified System.Console.ANSI          as ANSI
 
-
 -- Types -----------------------------------------------------------------------
 
 data TSize = TSize
     { tsWide :: Word
     , tsTall :: Word
     }
-
 
 --------------------------------------------------------------------------------
 

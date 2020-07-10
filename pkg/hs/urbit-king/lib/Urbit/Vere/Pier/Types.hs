@@ -12,7 +12,6 @@ import Urbit.Prelude hiding (Term)
 import Urbit.Arvo
 import Urbit.Time
 
-
 -- Avoid touching Nock values. -------------------------------------------------
 
 {-|
@@ -27,7 +26,6 @@ instance Eq Nock where
 
 instance Show Nock where
   show _ = "Nock"
-
 
 --------------------------------------------------------------------------------
 
@@ -52,7 +50,6 @@ data BootSeq = BootSeq LogIdentity [Nock] [Ev]
 deriveNoun ''LogIdentity
 deriveNoun ''Pill
 
-
 -- Jobs ------------------------------------------------------------------------
 
 data Work = Work EventId Mug Wen Ev
@@ -73,7 +70,6 @@ jobId (DoWork (Work eId _ _ _))  = eId
 jobMug :: Job -> Mug
 jobMug (RunNok (LifeCyc _ mug _)) = mug
 jobMug (DoWork (Work _ mug _ _))  = mug
-
 
 --------------------------------------------------------------------------------
 
@@ -96,7 +92,6 @@ data IODriver = IODriver
     { bornEvent   :: IO Ev
     , startDriver :: (Ev -> STM ()) -> IO (Async (), Perform)
     }
-
 
 -- Instances -------------------------------------------------------------------
 

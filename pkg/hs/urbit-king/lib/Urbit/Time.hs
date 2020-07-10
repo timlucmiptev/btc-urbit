@@ -15,7 +15,6 @@ import Data.Time.Clock.System (SystemTime(..), getSystemTime)
 import Data.Time.Clock.System (systemToUTCTime, utcToSystemTime)
 import Urbit.Noun             (FromNoun, ToNoun)
 
-
 -- Types -----------------------------------------------------------------------
 
 newtype Gap = Gap { _fractoSecs :: Integer }
@@ -26,7 +25,6 @@ newtype Unix = Unix { _sinceUnixEpoch :: Gap }
 
 newtype Wen = Wen { _sinceUrbitEpoch :: Gap }
   deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun)
-
 
 -- Lenses ----------------------------------------------------------------------
 
@@ -68,7 +66,6 @@ unix = iso toUnix fromUnix
 systemTime :: Iso' Wen SystemTime
 systemTime = unix . unixSystemTime
 
-
 --------------------------------------------------------------------------------
 
 toDenomSecs :: Integer -> Gap -> Integer
@@ -97,7 +94,6 @@ milliSecs = iso (toDenomSecs denom) (fromDenomSecs denom)
 secs :: Iso' Gap Integer
 secs = iso (toDenomSecs denom) (fromDenomSecs denom)
   where denom = 1
-
 
 --------------------------------------------------------------------------------
 

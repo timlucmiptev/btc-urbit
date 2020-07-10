@@ -18,7 +18,6 @@ import Data.Sequence (Seq((:<|)))
 import qualified Urbit.Arvo          as Arvo
 import qualified Urbit.Vere.Term.API as Term
 
-
 --------------------------------------------------------------------------------
 
 data SpinnerCause = User | Event Text
@@ -100,7 +99,6 @@ drawState St{..} = hist <> out <> cur <> spin
     out  = if null sLine   then [] else [EvEdit sLine]
     cur  = if 0 == sCurPos then [] else [EvMove $ fromIntegral $ sCurPos]
     spin = maybe [] (singleton . EvSpin . Just) sSpinner
-
 
 -- Conversion ------------------------------------------------------------------
 

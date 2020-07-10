@@ -37,7 +37,6 @@ import qualified Urbit.Vere.NounServ      as Serv
 import qualified Urbit.Vere.Term.API      as Term
 import qualified Urbit.Vere.Term.Render   as T
 
-
 -- Types -----------------------------------------------------------------------
 
 -- | All stateful data in the printing to stdOutput.

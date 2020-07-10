@@ -38,7 +38,6 @@ import qualified Urbit.Vere.Term.API    as Term
 import qualified Urbit.Vere.Term.Demux  as Term
 import qualified Urbit.Vere.Term.Render as Term
 
-
 --------------------------------------------------------------------------------
 
 _ioDrivers = [] :: [IODriver]
@@ -49,7 +48,6 @@ setupPierDirectory shipPath = do
        let pax = shipPath <> "/.urb/" <> seg
        createDirectoryIfMissing True pax
        io $ setFileMode pax ownerModes
-
 
 -- Load pill into boot sequence. -----------------------------------------------
 
@@ -71,7 +69,6 @@ generateBootSeq ship Pill{..} lite boot = do
       Fake _ -> True
       _      -> False
 
-
 -- Write a batch of jobs into the event log ------------------------------------
 
 writeJobs :: EventLog -> Vector Job -> RIO e ()
@@ -89,7 +86,6 @@ writeJobs log !jobs = do
     jobPayload :: Job -> Noun
     jobPayload (RunNok (LifeCyc _ m n)) = toNoun (m, n)
     jobPayload (DoWork (Work _ m d o))  = toNoun (m, d, o)
-
 
 -- Boot a new ship. ------------------------------------------------------------
 
@@ -123,7 +119,6 @@ booted pill lite flags ship boot = do
       writeJobs log (fromList events)
       logTrace "Events written"
       pure (serf, log, serfSt)
-
 
 -- Resume an existing ship. ----------------------------------------------------
 
@@ -163,7 +158,6 @@ getSnapshot top last = do
         createDirectoryIfMissing True replayDir
         snapshotNums <- mapMaybe readMay <$> listDirectory replayDir
         pure $ sort (filter (<= fromIntegral last) snapshotNums)
-
 
 -- Run Pier --------------------------------------------------------------------
 
@@ -257,7 +251,6 @@ pier (serf, log, ss) mStart = do
 
     atomically $ (Term.spin muxed) (Just "shutdown")
 
-
 death :: Text -> Async () -> STM (Either (Text, SomeException) Text)
 death tag tid = do
   waitCatchSTM tid <&> \case
@@ -310,7 +303,6 @@ drivers inst who isFake plan shutdownSTM termSys stderr =
         dTerm       <- runTerm
         pure (Drivers{..})
 
-
 -- Route Effects to Drivers ----------------------------------------------------
 
 router :: HasLogFunc e => STM FX -> Drivers e -> RAcquire e (Async ())
@@ -336,7 +328,6 @@ router waitFx Drivers{..} =
               FailParse n                          -> logError
                                                     $ display
                                                     $ pack @Text (ppShow n)
-
 
 -- Compute Thread --------------------------------------------------------------
 
@@ -405,7 +396,6 @@ runCompute serf ss getEvent getSaveSignal getShutdownSignal
             logDebug $ "Shutting down compute system..."
             Serf.snapshot serf ss
             pure ()
-
 
 -- Persist Thread --------------------------------------------------------------
 

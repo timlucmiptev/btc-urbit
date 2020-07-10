@@ -121,7 +121,7 @@ library
     , terminal-progress-bar
     , terminal-size
     , text
-    , time ^>= 1.8
+    , time             ^>= 1.8
     , transformers
     , unix
     , unliftio-core

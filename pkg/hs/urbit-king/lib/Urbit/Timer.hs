@@ -8,7 +8,6 @@ import Prelude    hiding (init)
 import qualified Data.Time.Clock.System as Sys
 import qualified GHC.Event              as Ev
 
-
 -- Timer Stuff -----------------------------------------------------------------
 
 data Timer = Timer

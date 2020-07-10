@@ -25,7 +25,6 @@ import Network.Socket     (tupleToHostAddress)
 
 import qualified Urbit.Vere.Log as Log
 
-
 -- Utils -----------------------------------------------------------------------
 
 pid :: KingId
@@ -131,7 +130,6 @@ tests =
     --       testProperty "Two galaxies can talk" $
     --           twoTalk
     ]
-
 
 -- Generate Arbitrary Values ---------------------------------------------------
 

@@ -36,12 +36,10 @@ deriveNoun ''TreeTest
 
 type TreeTests = [TreeTest]
 
-
 -- Utils -----------------------------------------------------------------------
 
 roundTrip :: forall a. Eq a => (a -> a) -> a -> Bool
 roundTrip f x = f x == x
-
 
 -- Props -----------------------------------------------------------------------
 
@@ -50,7 +48,6 @@ mapRoundtrip = roundTrip (mapFromHoonMap . mapToHoonMap)
 
 setRoundtrip :: Set SmallNoun -> Bool
 setRoundtrip = roundTrip (setFromHoonSet . setToHoonSet)
-
 
 -- Golden Tests ----------------------------------------------------------------
 
@@ -69,7 +66,6 @@ treeRTMug inp = do
     mug <- evaluate $ mug $ toNoun $ treeTestsIdentity tee
     pure $ encodeUtf8 $ tlshow (mug :: Natural)
 
-
 goldenFile :: String -> String -> (FilePath -> IO L.ByteString) -> TestTree
 goldenFile testName testFileName action =
     goldenVsString testName gold (action pill)
@@ -77,7 +73,6 @@ goldenFile testName testFileName action =
     root = "pkg/hs/urbit-king/test/gold" </> testFileName
     gold = root <.> "gold"
     pill = root <.> "pill"
-
 
 -- Test Tree -------------------------------------------------------------------
 

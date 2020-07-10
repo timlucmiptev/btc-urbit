@@ -149,7 +149,6 @@ readAmesDomains bloq azimuth =
     getTurf idx =
       Turf . fmap Cord . reverse . splitOn "." <$> AZ.dnsDomains idx
 
-
 validateShipAndGetImmediateSponsor :: Quantity -> Address -> Seed -> Web3 Ship
 validateShipAndGetImmediateSponsor block azimuth (Seed ship life ring oaf) =
   case clanFromShip ship of
@@ -190,7 +189,6 @@ validateShipAndGetImmediateSponsor block azimuth (Seed ship life ring oaf) =
           -- supplies the data necessary for it to function.
           pure who
 
-
 -- Walk through the sponsorship chain retrieving the actual sponsorship chain
 -- as it exists on Ethereum.
 getSponsorshipChain :: Quantity -> Address -> Ship -> Web3 [(Ship,EthPoint)]
@@ -215,7 +213,6 @@ getSponsorshipChain block azimuth = loop
         (_, Just (_, _, _, (True, sponsor), _)) -> do
             chain <- loop sponsor
             pure $ chain ++ [(ship, ethPoint)]
-
 
 -- Produces either an error or a validated boot event structure.
 dawnVent :: Seed -> RIO e (Either Text Dawn)
@@ -244,7 +241,6 @@ dawnVent dSeed@(Seed ship life ring oaf) = do
     Left x  -> pure $ Left $ tshow x
     Right y -> pure $ Right y
 
-
 dawnCometList :: RIO e [Ship]
 dawnCometList = do
   -- Get the jamfile with the list of stars accepting comets right now.
@@ -255,7 +251,6 @@ dawnCometList = do
 
   noun <- cueBS body & either throwIO pure
   fromNounErr noun & either (throwIO . uncurry ParseErr) pure
-
 
 -- Comet Mining ----------------------------------------------------------------
 

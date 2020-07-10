@@ -16,7 +16,6 @@ import Foreign.Storable (peek, poke, sizeOf)
 
 import qualified Data.ByteString.Unsafe as BU
 
-
 -- Types -----------------------------------------------------------------------
 
 type Env = MDB_env
@@ -36,7 +35,6 @@ data VereLMDBExn
   deriving Show
 
 instance Exception VereLMDBExn where
-
 
 -- Transactions ----------------------------------------------------------------
 
@@ -77,7 +75,6 @@ writeTxn env = mkRAcquireType begin finalize
         ReleaseEarly     -> mdb_txn_commit txn
         ReleaseException -> mdb_txn_abort  txn
 
-
 -- Cursors ---------------------------------------------------------------------
 
 cursor :: Txn -> Dbi -> RAcquire e Cur
@@ -85,7 +82,6 @@ cursor txn dbi = mkRAcquire open close
   where
     open  = io $ mdb_cursor_open txn dbi
     close = io . mdb_cursor_close
-
 
 -- Last Key In Dbi -------------------------------------------------------------
 
@@ -96,7 +92,6 @@ lastKeyWord64 env dbi txn =
     io $ mdb_cursor_get MDB_LAST cur pKey pVal >>= \case
         False -> pure 0
         True  -> peek pKey >>= mdbValToWord64
-
 
 -- Delete Rows -----------------------------------------------------------------
 
@@ -122,7 +117,6 @@ deleteRowsFrom env dbi start = do
                 unless found $
                     throwIO (MissingEvent eId)
 
-
 -- Append Rows to Sequence -----------------------------------------------------
 
 {-
@@ -142,7 +136,6 @@ appendToSequence env dbi events = do
                 False -> throwIO (BadWriteEvent k)
 -}
 
-
 -- Insert ----------------------------------------------------------------------
 
 insertWord64 :: Env -> Dbi -> Word64 -> ByteString -> RIO e ()
@@ -153,7 +146,6 @@ insertWord64 env dbi k v = do
             False -> throwIO (BadWriteEffect k)
   where
     flags = compileWriteFlags []
-
 
 {-
 --------------------------------------------------------------------------------
@@ -289,7 +281,6 @@ withWordPtr :: (MonadIO m, MonadUnliftIO m)
 withWordPtr w cb =
     withRunInIO $ \run ->
         allocaBytes (sizeOf w) (\p -> poke p w >> run (cb p))
-
 
 -- Lower-Level Operations ------------------------------------------------------
 

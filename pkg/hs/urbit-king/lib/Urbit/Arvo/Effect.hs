@@ -14,7 +14,6 @@ import Urbit.Arvo.Common (AmesDest, Turf)
 import Urbit.Arvo.Common (ReOrg(..), reorgThroughNoun)
 import Urbit.Arvo.Common (Desk)
 
-
 -- Newt Effects ----------------------------------------------------------------
 
 {-|
@@ -27,7 +26,6 @@ data NewtEf
   deriving (Eq, Ord, Show)
 
 deriveNoun ''NewtEf
-
 
 -- HTTP Client Effects ---------------------------------------------------------
 
@@ -51,7 +49,6 @@ data HttpClientEf
 deriveNoun ''HttpClientReq
 deriveNoun ''HttpClientEf
 
-
 -- HTTP Server Effects ---------------------------------------------------------
 
 {-|
@@ -64,7 +61,6 @@ data HttpServerEf
   deriving (Eq, Ord, Show)
 
 deriveNoun ''HttpServerEf
-
 
 -- File System Effects ---------------------------------------------------------
 
@@ -83,7 +79,6 @@ data SyncEf
 
 deriveNoun ''SyncEf
 
-
 -- UDP Effects -----------------------------------------------------------------
 
 {-|
@@ -99,7 +94,6 @@ data AmesEf
 
 deriveNoun ''AmesEf
 
-
 -- Timer Effects ---------------------------------------------------------------
 
 {-|
@@ -112,7 +106,6 @@ data BehnEf
   deriving (Eq, Ord, Show)
 
 deriveNoun ''BehnEf
-
 
 -- Terminal Effects ------------------------------------------------------------
 
@@ -165,7 +158,6 @@ data TermEf
 deriveNoun ''Blit
 deriveNoun ''TermEf
 
-
 -- IO-Driver Routing -----------------------------------------------------------
 
 data VaneEf
@@ -181,7 +173,6 @@ data VaneEf
   deriving (Eq, Ord, Show)
 
 deriveNoun ''VaneEf
-
 
 -- Top-Level Ef Type -----------------------------------------------------------
 

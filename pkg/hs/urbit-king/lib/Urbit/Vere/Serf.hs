@@ -38,7 +38,6 @@ import qualified Urbit.Ob                 as Ob
 import qualified Urbit.Time               as Time
 import qualified Urbit.Vere.Log           as Log
 
-
 -- Serf Config -----------------------------------------------------------------
 
 type Flags = [Flag]
@@ -63,7 +62,6 @@ data Config = Config FilePath [Flag]
 
 serf :: HasLogFunc e => Text -> RIO e ()
 serf msg = logInfo $ display ("SERF: " <> msg)
-
 
 -- Types -----------------------------------------------------------------------
 
@@ -112,14 +110,12 @@ data SerfExn
     | InvalidInitialPlea Plea
   deriving (Show)
 
-
 -- Instances -------------------------------------------------------------------
 
 instance Exception SerfExn
 
 deriveNoun ''ShipId
 deriveNoun ''Plea
-
 
 -- Utils -----------------------------------------------------------------------
 
@@ -139,7 +135,6 @@ printErr :: MVar (Text -> RIO e ()) -> Text -> RIO e ()
 printErr m txt = do
   f <- readMVar m
   f txt
-
 
 -- Process Management ----------------------------------------------------------
 
@@ -216,7 +211,6 @@ _shutdownAndWait serf code = do
     shutdown serf code
     waitForExit serf
 
-
 -- Basic Send and Receive Operations -------------------------------------------
 
 withWord64AsByteString :: Word64 -> (ByteString -> RIO e a) -> RIO e a
@@ -266,7 +260,6 @@ recvAtom w = do
 
 cordText :: Cord -> Text
 cordText = T.strip . unCord
-
 
 --------------------------------------------------------------------------------
 
@@ -345,7 +338,6 @@ sendWork w job =
       PWork work    -> replace (DoWork work)
       PStdr _ cord  -> printErr (sStderr w) (cordText cord) >> loop
       PSlog _ pri t -> printTank (sStderr w) pri t >> loop
-
 
 --------------------------------------------------------------------------------
 
@@ -452,7 +444,6 @@ replayJobs serf lastEv = go Nothing
                          )
         updateProgressBar start msg
 
-
 replay :: (HasStderrLogFunc e, HasLogFunc e)
           => Serf e -> Log.EventLog -> Maybe Word64 -> RIO e SerfState
 replay serf log last = do
@@ -504,7 +495,6 @@ toJobs ident eId =
         noun            <- cueBSExn bs
         (mug, wen, ovm) <- fromNounExn noun
         pure $ DoWork (Work eId mug wen ovm)
-
 
 -- Collect Effects for Parsing -------------------------------------------------
 

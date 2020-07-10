@@ -34,11 +34,9 @@ import qualified Urbit.Atom.Slow as Slow
 
 import qualified Urbit.Atom.Fast as A
 
-
 --------------------------------------------------------------------------------
 
 type Atom = Natural
-
 
 -- Choose Implementation Based on Platform -------------------------------------
 
@@ -96,7 +94,6 @@ wordsAtom =
 #else
   A.wordsAtom
 #endif
-
 
 -- String/Cord Conversion ------------------------------------------------------
 
