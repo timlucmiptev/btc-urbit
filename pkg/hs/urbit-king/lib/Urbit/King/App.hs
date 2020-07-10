@@ -18,15 +18,11 @@ import Urbit.Prelude
 
 import System.Directory (createDirectoryIfMissing, getHomeDirectory)
 
---------------------------------------------------------------------------------
-
 class HasConfigDir a where
     configDirL :: Lens' a FilePath
 
 class HasStderrLogFunc a where
     stderrLogFuncL :: Lens' a LogFunc
-
---------------------------------------------------------------------------------
 
 data App = App
     { _appLogFunc       :: !LogFunc
@@ -79,8 +75,6 @@ runAppNoLog act =
       logOptions <- logOptionsHandle handle True
       withLogFunc logOptions $ \logFunc ->
         runRIO (App logFunc logFunc) act
-
---------------------------------------------------------------------------------
 
 -- | A PierApp is like an App, except that it also provides a PierConfig
 data PierApp = PierApp

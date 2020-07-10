@@ -37,8 +37,6 @@ ksInsert x s = snd $ ksInsertKey x s
 ksDelete :: Int -> KeyedSet a -> KeyedSet a
 ksDelete k (KeyedSet t n) = KeyedSet (deleteMap k t) n
 
---------------------------------------------------------------------------------
-
 data Demux = Demux
     { dConns :: TVar (KeyedSet Client)
     , dStash :: TVar Logic.St

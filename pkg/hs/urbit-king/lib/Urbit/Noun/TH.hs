@@ -14,8 +14,6 @@ import Urbit.Noun.Core (textToUtf8Atom)
 
 import qualified Data.Char as C
 
---------------------------------------------------------------------------------
-
 type ConInfo = (Name, [Type])
 
 data Shape
@@ -74,12 +72,8 @@ typeShape tyName = do
       GadtC nm bangTypes ty         -> error "GADTs are not supported"
       RecGadtC nm varBangTypes ty   -> error "GADTs are not supported"
 
---------------------------------------------------------------------------------
-
 deriveNoun :: Name -> Q [Dec]
 deriveNoun n = (<>) <$> deriveToNoun n <*> deriveFromNoun n
-
---------------------------------------------------------------------------------
 
 deriveToNoun :: Name -> Q [Dec]
 deriveToNoun tyName = do
@@ -100,8 +94,6 @@ deriveToNoun tyName = do
         inst    = AppT (ConT ''ToNoun) ty
 
     pure [InstanceD overlap ctx inst [ValD (VarP 'toNoun) body []]]
-
---------------------------------------------------------------------------------
 
 addErrTag :: String -> Exp -> Exp
 addErrTag tag exp =
@@ -208,8 +200,6 @@ taggedFromNoun cons = LamE [VarP n] (DoE [getHead, getTag, examine])
     fallback  = Match WildP (NormalB $ AppE (VarE 'fail) matchFail) []
     matchFail = unexpectedTag (fst <$> cons) (VarE c)
 
---------------------------------------------------------------------------------
-
 tagString :: Int -> Name -> String
 tagString prefix = hsToHoon . drop prefix . nameStr
 
@@ -226,8 +216,6 @@ tagTup tag args = AppE (VarE 'toNoun) $ TupE (tagNoun tag : fmap VarE args)
 
 tup :: [Name] -> Exp
 tup = AppE (VarE 'toNoun) . TupE . fmap VarE
-
---------------------------------------------------------------------------------
 
 vodToNoun :: Exp
 vodToNoun = LamCaseE []
@@ -256,8 +244,6 @@ sumToNoun a c =
         where vars   = (zip tys ['a'..]) <&> (mkName . singleton . snd)
               params = VarP <$> vars
               body   = tagTup tag vars
-
---------------------------------------------------------------------------------
 
 hsToHoon :: String -> String
 hsToHoon = go []

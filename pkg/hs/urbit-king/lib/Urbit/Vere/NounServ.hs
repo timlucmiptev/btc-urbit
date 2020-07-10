@@ -19,8 +19,6 @@ import Urbit.Prelude
 import qualified Network.Wai.Handler.Warp as W
 import qualified Network.WebSockets       as WS
 
---------------------------------------------------------------------------------
-
 data Conn i o = Conn
     { cRecv :: STM (Maybe i)
     , cSend :: o -> STM ()
@@ -28,8 +26,6 @@ data Conn i o = Conn
 
 mkConn :: TBMChan i -> TBMChan o -> Conn i o
 mkConn inp out = Conn (readTBMChan inp) (writeTBMChan out)
-
---------------------------------------------------------------------------------
 
 data Client i o = Client
     { cConn  :: Conn i o
@@ -41,8 +37,6 @@ data Server i o a = Server
     , sAsync  :: Async ()
     , sData   :: a
     }
-
---------------------------------------------------------------------------------
 
 withRIOThread :: RIO e a -> RIO e (Async a)
 withRIOThread act = do
@@ -84,8 +78,6 @@ wsConn pre inp out wsc = do
          res <- atomically (waitCatchSTM writer <|> waitCatchSTM reader)
          logWarn $ displayShow (res :: Either SomeException ())
 
---------------------------------------------------------------------------------
-
 wsClient :: forall i o e. (ToNoun o, FromNoun i, Show o, Show i, HasLogFunc e)
          => Text -> W.Port -> RIO e (Client i o)
 wsClient pax por = do
@@ -102,8 +94,6 @@ wsClient pax por = do
                             runRIO env (wsConn "NOUNSERV (wsClie) " inp out con)
 
     pure $ Client con tid
-
---------------------------------------------------------------------------------
 
 wsServApp :: (HasLogFunc e, ToNoun o, FromNoun i, Show i, Show o)
           => (Conn i o -> STM ())

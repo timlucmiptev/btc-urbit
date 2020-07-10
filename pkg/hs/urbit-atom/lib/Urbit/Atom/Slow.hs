@@ -41,8 +41,6 @@ bit = BIT
 byt :: Word
 byt = BYT
 
---------------------------------------------------------------------------------
-
 {-|
   Natural number to LSB-ByteString.
 -}
@@ -60,8 +58,6 @@ bytesAtom = BS.foldr' go 0
  where
   go :: Word8 -> Natural -> Natural
   go byt' acc = shiftL acc 8 .|. fromIntegral byt'
-
---------------------------------------------------------------------------------
 
 {-|
   LSW-first Word Vector to Natural number.

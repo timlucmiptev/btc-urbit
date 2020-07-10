@@ -11,8 +11,6 @@ import Urbit.Noun
 import qualified Data.CaseInsensitive as CI
 import qualified Network.HTTP.Types   as HT
 
---------------------------------------------------------------------------------
-
 convertHeaders :: [HT.Header] -> [Header]
 convertHeaders = fmap f
   where

@@ -34,8 +34,6 @@ import qualified Urbit.Atom.Slow as Slow
 
 import qualified Urbit.Atom.Fast as A
 
---------------------------------------------------------------------------------
-
 type Atom = Natural
 
 -- Choose Implementation Based on Platform -------------------------------------

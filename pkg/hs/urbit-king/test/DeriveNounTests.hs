@@ -154,8 +154,6 @@ fooBarBaz = nounEquiv $ \case FooBarQueenAlice x y -> QueenAlice x y
                               FooBarBob x          -> Bob x
                               FooBarCharlie        -> Charlie
 
---------------------------------------------------------------------------------
-
 tests :: TestTree
 tests =
   testGroup "Log"

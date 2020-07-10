@@ -66,8 +66,6 @@ unix = iso toUnix fromUnix
 systemTime :: Iso' Wen SystemTime
 systemTime = unix . unixSystemTime
 
---------------------------------------------------------------------------------
-
 toDenomSecs :: Integer -> Gap -> Integer
 toDenomSecs denom (Gap g) = shiftR (g * denom) 64
 
@@ -94,8 +92,6 @@ milliSecs = iso (toDenomSecs denom) (fromDenomSecs denom)
 secs :: Iso' Gap Integer
 secs = iso (toDenomSecs denom) (fromDenomSecs denom)
   where denom = 1
-
---------------------------------------------------------------------------------
 
 now :: IO Wen
 now = view (from systemTime) <$> getSystemTime

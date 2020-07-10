@@ -261,8 +261,6 @@ recvAtom w = do
 cordText :: Cord -> Text
 cordText = T.strip . unCord
 
---------------------------------------------------------------------------------
-
 snapshot :: HasLogFunc e => Serf e -> SerfState -> RIO e ()
 snapshot serf ss = do
     logTrace $ display ("Taking snapshot at event " <> tshow (ssLastEv ss))
@@ -339,8 +337,6 @@ sendWork w job =
       PStdr _ cord  -> printErr (sStderr w) (cordText cord) >> loop
       PSlog _ pri t -> printTank (sStderr w) pri t >> loop
 
---------------------------------------------------------------------------------
-
 doJob :: HasLogFunc e => Serf e -> Job -> RIO e (Job, SerfState, FX)
 doJob serf job = do
     sendWork serf job >>= \case
@@ -359,8 +355,6 @@ replayJob serf job = do
         Left replace  -> throwIO (ReplacedEventDuringReplay (jobId job) replace)
         Right (ss, _) -> pure ss
 
---------------------------------------------------------------------------------
-
 updateProgressBar :: HasLogFunc e
                   => Int -> Text -> Maybe (ProgressBar ())
                   -> RIO e (Maybe (ProgressBar ()))
@@ -375,8 +369,6 @@ updateProgressBar count startMsg = \case
     Just pb -> do
       incProgress pb 1
       pure (Just pb)
-
---------------------------------------------------------------------------------
 
 type BootSeqFn = EventId -> Mug -> Time.Wen -> Job
 

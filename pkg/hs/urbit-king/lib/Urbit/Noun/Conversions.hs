@@ -93,8 +93,6 @@ instance FromNoun UD where
       Nothing -> fail ("invalid decimal atom: " <> unpack (filter (/= '.') t))
       Just vl -> pure (UD vl)
 
---------------------------------------------------------------------------------
-
 uTypeAddDots :: String -> String
 uTypeAddDots = reverse . go . reverse
   where
@@ -183,8 +181,6 @@ uvCharNum = \case
   'u' -> pure 30
   'v' -> pure 31
   _   -> Nothing
-
---------------------------------------------------------------------------------
 
 -- @uw
 newtype UW = UW { unUW :: Atom }

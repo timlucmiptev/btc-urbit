@@ -10,8 +10,6 @@ import Test.Tasty.HUnit
 import qualified Urbit.Ob        as Ob
 import qualified Urbit.Vere.Dawn as Dawn
 
---------------------------------------------------------------------------------
-
 -- These golden cases generated in Urbit from entropy to make sure our +mix,
 -- +shas, +shaf, etc. were actually calculated correctly.
 
@@ -46,8 +44,6 @@ shafByteStrings = (Dawn.shaf testSalt testString) @?= expected
   where
     expected = cordToAtomBytes "0w3h.Bg1Qh.ZZjoJ.23J~p.PHg-D"
 
---------------------------------------------------------------------------------
-
 cometShip :: Ship
 cometShip = case Ob.parsePatp cometStr of
   Left x  -> error "Invalid ship name"
@@ -74,8 +70,6 @@ testCometFingerprintBS = (Dawn.cometFingerprintBS cometPass) @?= cometRawBS
 -- Tests that the real public interface for fingerprint generation does the
 -- byte-munging correctly.
 testCometFingerprint = (Dawn.cometFingerprint cometPass) @?= cometShip
-
---------------------------------------------------------------------------------
 
 tests :: TestTree
 tests =

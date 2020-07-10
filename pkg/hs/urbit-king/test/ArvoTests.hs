@@ -42,8 +42,6 @@ instance Arbitrary EvExample where
            (toNoun (Path ["vane", "vane", "jael"], Cord "veer", (), (), ()))
     ]
 
---------------------------------------------------------------------------------
-
 tests :: TestTree
 tests =
   testGroup "Arvo Events and Effects"

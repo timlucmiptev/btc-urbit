@@ -10,8 +10,6 @@ import System.IO.LockFile.Internal (LockingParameters(..), RetryStrategy(..),
                                     lock, unlock)
 import qualified System.Directory as Directory
 
---------------------------------------------------------------------------------
-
 lockFile :: HasLogFunc e => FilePath -> RAcquire e ()
 lockFile pax = void $ mkRAcquire start stop
   where

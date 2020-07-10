@@ -29,8 +29,6 @@ data HttpClientDrv = HttpClientDrv
   , hcdLive    :: TVar (Map ReqId (Async ()))
   }
 
---------------------------------------------------------------------------------
-
 cvtReq :: HttpClientReq -> Maybe H.Request
 cvtReq r =
   H.parseRequest (unpack (unCord $ url r)) <&> \init -> init
@@ -51,8 +49,6 @@ cvtRespHeaders resp =
 bornEv :: KingId -> Ev
 bornEv king =
     EvBlip $ BlipEvHttpClient $ HttpClientEvBorn (king, ()) ()
-
---------------------------------------------------------------------------------
 
 client :: forall e. HasLogFunc e
        => KingId -> QueueEv -> ([Ev], RAcquire e (EffCb e HttpClientEf))

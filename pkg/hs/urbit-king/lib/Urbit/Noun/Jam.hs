@@ -65,8 +65,6 @@ newtype Put a = Put
            -> IO (PutResult a)
   }
 
---------------------------------------------------------------------------------
-
 {-# INLINE getRef #-}
 getRef :: Put (Maybe Word)
 getRef = Put $ \tbl s -> PutResult s <$> H.lookup tbl (pos s)
@@ -232,8 +230,6 @@ instance Monad Put where
         runPut (f x') tbl s'
     {-# INLINE (>>=) #-}
 
---------------------------------------------------------------------------------
-
 doPut :: H.CuckooHashTable Word Word -> Word -> Put () -> ByteString
 doPut !tbl !sz m =
     unsafePerformIO $ do
@@ -250,8 +246,6 @@ doPut !tbl !sz m =
     mbFlush = do
       shouldFlush <- (/= 0) . off <$> getS
       when shouldFlush flush
-
---------------------------------------------------------------------------------
 
 {-|
     TODO Handle back references

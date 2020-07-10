@@ -25,8 +25,6 @@ import qualified Data.ByteString.Unsafe as BS
 import qualified Data.HashTable.IO      as H
 import qualified Data.Vector.Primitive  as VP
 
---------------------------------------------------------------------------------
-
 cueBS :: ByteString -> Either DecodeErr Noun
 cueBS = doGet dNoun
 
@@ -96,8 +94,6 @@ doGet m bs =
     GetResult _ r <- runGet m endPtr tbl (S (castPtr ptr) 0 0)
     pure r
 
---------------------------------------------------------------------------------
-
 instance Exception DecodeErr
 
 instance Functor Get where
@@ -141,13 +137,9 @@ instance MonadIO Get where
   liftIO io = Get $ \end tbl s -> GetResult s <$> io
   {-# INLINE liftIO #-}
 
---------------------------------------------------------------------------------
-
 {-# INLINE badEncoding #-}
 badEncoding :: Ptr Word -> S -> String -> IO a
 badEncoding !endPtr s msg = throwIO $ BadEncoding (endPtr,s) msg
-
---------------------------------------------------------------------------------
 
 {-# INLINE getPos #-}
 getPos :: Get Word
@@ -180,8 +172,6 @@ advance !n = Get $ \_ _ s -> do
                   }
 
   pure (GetResult newS ())
-
---------------------------------------------------------------------------------
 
 {-# INLINE guardInfinite #-}
 guardInfinite :: Ptr Word -> Ptr Word -> S -> IO ()

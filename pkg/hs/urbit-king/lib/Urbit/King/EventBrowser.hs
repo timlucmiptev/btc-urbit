@@ -19,8 +19,6 @@ import Urbit.Vere.Log            (EventLog)
 import qualified Data.Conduit.Combinators as C
 import qualified Urbit.Vere.Log           as Log
 
---------------------------------------------------------------------------------
-
 data Event = Event
     { num :: Word64
     , mug :: Mug
@@ -30,8 +28,6 @@ data Event = Event
   deriving Show
 
 data Input = Next | Prev | Quit | Trim | Effs | Init | Last
-
---------------------------------------------------------------------------------
 
 run :: HasLogFunc e => EventLog -> RIO e ()
 run log = do

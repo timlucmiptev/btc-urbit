@@ -169,8 +169,6 @@ morVal, gorVal :: NounVal a -> NounVal a -> Bool
 morVal = on mor non
 gorVal = on gor non
 
---------------------------------------------------------------------------------
-
 nounVal :: ToNoun a => Iso' a (NounVal a)
 nounVal = iso to val
   where

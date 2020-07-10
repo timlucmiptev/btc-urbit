@@ -78,8 +78,6 @@ _turfText = intercalate "." . reverse . fmap unCord . unTurf
 renderGalaxy :: Galaxy -> Text
 renderGalaxy = Ob.renderPatp . Ob.patp . fromIntegral . unPatp
 
---------------------------------------------------------------------------------
-
 {-|
     inst      -- Process instance number.
     who       -- Which ship are we?

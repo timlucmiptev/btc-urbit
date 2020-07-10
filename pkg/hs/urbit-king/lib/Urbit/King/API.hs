@@ -36,8 +36,6 @@ data King = King
     , kTermConn :: TermConnAPI
     }
 
---------------------------------------------------------------------------------
-
 {-|
     Get the filepath of the urbit config directory and the ports file.
 -}

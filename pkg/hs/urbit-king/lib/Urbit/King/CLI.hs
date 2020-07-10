@@ -15,8 +15,6 @@ import System.Environment (getProgName)
 import qualified Data.Version as Version
 import qualified Paths_urbit_king
 
---------------------------------------------------------------------------------
-
 data Opts = Opts
     { oQuiet        :: Bool
     , oHashless     :: Bool
@@ -100,8 +98,6 @@ data Cmd
     | CmdCon FilePath
   deriving (Show)
 
---------------------------------------------------------------------------------
-
 headNote :: Doc
 headNote = string $ intercalate "\n"
   [ "Urbit: a personal server operating function"
@@ -125,8 +121,6 @@ footNote exe = string $ intercalate "\n"
   , "  https://github.com/urbit/urbit/blob/master/CONTRIBUTING.md"
   ]
 
---------------------------------------------------------------------------------
-
 version :: String
 version = Version.showVersion Paths_urbit_king.version
 
@@ -146,12 +140,8 @@ parseArgs = do
 
     customExecParser p o
 
---------------------------------------------------------------------------------
-
 defaultPillURL :: String
 defaultPillURL = "https://bootstrap.urbit.org/urbit-v" <> version <> ".pill"
-
---------------------------------------------------------------------------------
 
 newComet :: Parser BootType
 newComet = flag' BootComet

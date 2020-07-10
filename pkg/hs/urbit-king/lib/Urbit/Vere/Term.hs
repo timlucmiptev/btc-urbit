@@ -89,8 +89,6 @@ _spin_warm_us = 50000
 _spin_rate_us = 250000
 _spin_idle_us = 500000
 
---------------------------------------------------------------------------------
-
 rioAllocaBytes :: (MonadIO m, MonadUnliftIO m)
                => Int -> (Ptr a -> m b) -> m b
 rioAllocaBytes size action =
@@ -106,8 +104,6 @@ isTerminalBlit :: Blit -> Bool
 isTerminalBlit (Sav _ _) = False
 isTerminalBlit (Sag _ _) = False
 isTerminalBlit _         = True
-
---------------------------------------------------------------------------------
 
 connClient :: Serv.Conn Belt [Term.Ev] -> Client
 connClient c = Client
@@ -489,8 +485,6 @@ localClient doneSignal = fst <$> mkRAcquire start stop
         sendBelt b = do
           -- logDebug $ displayShow ("terminalBelt", b)
           atomically $ writeTQueue rq b
-
---------------------------------------------------------------------------------
 
 {-|
     Terminal Driver

@@ -149,8 +149,6 @@ class FromNoun a where
 class ToNoun a where
   toNoun :: a -> Noun
 
---------------------------------------------------------------------------------
-
 fromNoun :: FromNoun a => Noun -> Maybe a
 fromNoun n = runParser (parseNoun n) [] onFail onSuccess
   where

@@ -33,8 +33,6 @@ import Urbit.Noun.TH
 import Urbit.Noun.Tree
 import qualified Control.Lens  as Lens
 
---------------------------------------------------------------------------------
-
 _Cue :: Lens.Prism' ByteString Noun
 _Cue = Lens.prism' jamBS (eitherToMaybe . cueBS)
   where

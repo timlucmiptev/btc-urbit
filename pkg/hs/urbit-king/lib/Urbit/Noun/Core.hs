@@ -46,8 +46,6 @@ pattern A a   <- NAtom _ a     where A = mkAtom
 
 {-# COMPLETE C, A #-}
 
---------------------------------------------------------------------------------
-
 instance Hashable Noun where
   hash = \case NCell h _ _ _ -> h
                NAtom h _     -> h
@@ -136,8 +134,6 @@ genAtom = do
   arbitrary >>= \case
     False -> genNatural
     True  -> (`mod` 16) <$> genNatural
-
---------------------------------------------------------------------------------
 
 {-# INLINE nounSize #-}
 nounSize :: Noun -> Word

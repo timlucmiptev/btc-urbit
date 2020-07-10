@@ -27,8 +27,6 @@ pierPathL = pierConfigL . pcPierPath
 dryRunL :: HasPierConfig a => Lens' a Bool
 dryRunL = pierConfigL . pcDryRun
 
--------------------------------------------------------------------------------
-
 data NetMode
   = NMNone
   | NMLocalhost

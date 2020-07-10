@@ -7,8 +7,6 @@ import ClassyPrelude
 import Control.Lens
 import Urbit.Noun
 
---------------------------------------------------------------------------------
-
 main :: IO ()
 main = do
   print "cue brass" -- void getLine

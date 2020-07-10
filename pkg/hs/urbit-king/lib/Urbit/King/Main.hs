@@ -89,20 +89,14 @@ import qualified Urbit.Vere.Pier         as Pier
 import qualified Urbit.Vere.Serf         as Serf
 import qualified Urbit.Vere.Term         as Term
 
---------------------------------------------------------------------------------
-
 zod :: Ship
 zod = 0
-
---------------------------------------------------------------------------------
 
 removeFileIfExists :: HasLogFunc env => FilePath -> RIO env ()
 removeFileIfExists pax = do
   exists <- doesFileExist pax
   when exists $ do
       removeFile pax
-
---------------------------------------------------------------------------------
 
 toSerfFlags :: CLI.Opts -> Serf.Flags
 toSerfFlags CLI.Opts{..} = catMaybes m
@@ -213,8 +207,6 @@ runRAcquire :: (MonadUnliftIO (m e),  MonadIO (m e), MonadReader e (m e))
             => RAcquire e a -> m e a
 runRAcquire act = rwith act pure
 
---------------------------------------------------------------------------------
-
 checkEvs :: forall e. HasLogFunc e => FilePath -> Word64 -> Word64 -> RIO e ()
 checkEvs pierPath first last = do
     rwith (Log.existing logPath) $ \log -> do
@@ -255,8 +247,6 @@ checkEvs pierPath first last = do
     unpackJob :: Noun -> RIO e (Mug, Wen, Noun)
     unpackJob = io . fromNounExn
 
---------------------------------------------------------------------------------
-
 {-|
     This runs the serf at `$top/.tmpdir`, but we disable snapshots,
     so this should never actually be created. We just do this to avoid
@@ -280,8 +270,6 @@ collectAllFx top = do
 
     serfFlags :: Serf.Flags
     serfFlags = [Serf.Hashless, Serf.DryRun]
-
---------------------------------------------------------------------------------
 
 replayPartEvs :: forall e. (HasStderrLogFunc e, HasLogFunc e)
               => FilePath -> Word64 -> RIO e ()
@@ -316,8 +304,6 @@ replayPartEvs top last = do
 
     serfFlags :: Serf.Flags
     serfFlags = [Serf.Hashless]
-
---------------------------------------------------------------------------------
 
 {-|
     Interesting
@@ -379,8 +365,6 @@ validateNounVal inpVal = do
         error "Value fails test: jam x == jam (cue (jam x))"
 
     pure outByt
-
---------------------------------------------------------------------------------
 
 pillFrom :: CLI.PillSource -> RIO e Pill
 
@@ -556,13 +540,9 @@ main = do
         CLI.CmdBug CLI.CheckComet               -> runApp $ checkComet
         CLI.CmdCon pier                         -> runAppLogFile $ connTerm pier
 
---------------------------------------------------------------------------------
-
 connTerm :: forall e. HasLogFunc e => FilePath -> RIO e ()
 connTerm pier =
     Term.runTerminalClient pier
-
---------------------------------------------------------------------------------
 
 checkFx :: HasLogFunc e
         => FilePath -> Word64 -> Word64 -> RIO e ()

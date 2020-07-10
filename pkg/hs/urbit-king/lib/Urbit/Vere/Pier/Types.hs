@@ -27,8 +27,6 @@ instance Eq Nock where
 instance Show Nock where
   show _ = "Nock"
 
---------------------------------------------------------------------------------
-
 type EventId = Word64
 
 data Pill = Pill
@@ -70,8 +68,6 @@ jobId (DoWork (Work eId _ _ _))  = eId
 jobMug :: Job -> Mug
 jobMug (RunNok (LifeCyc _ mug _)) = mug
 jobMug (DoWork (Work _ mug _ _))  = mug
-
---------------------------------------------------------------------------------
 
 data Order
     = OBoot Word -- lifecycle length

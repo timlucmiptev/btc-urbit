@@ -17,8 +17,6 @@ import qualified Data.Conduit.Combinators as CC
 import qualified Data.Map.Strict          as M
 import qualified Data.Set                 as S
 
---------------------------------------------------------------------------------
-
 data ClayDrv = ClayDrv
   { cdMountPoints :: TVar (Map Desk (Map FilePath Int))
   }
@@ -108,8 +106,6 @@ buildActionListFromDifferences fp snapshot = do
   let deletedItems = (toList deletedSet) <&> \x -> (x, Nothing)
 
   pure $ sort (deletedItems ++ changedItems)
-
---------------------------------------------------------------------------------
 
 clay :: forall e. (HasPierConfig e, HasLogFunc e)
      => KingId -> QueueEv -> ([Ev], RAcquire e (EffCb e SyncEf))

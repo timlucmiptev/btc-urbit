@@ -18,8 +18,6 @@ import Data.Sequence (Seq((:<|)))
 import qualified Urbit.Arvo          as Arvo
 import qualified Urbit.Vere.Term.API as Term
 
---------------------------------------------------------------------------------
-
 data SpinnerCause = User | Event Text
   deriving (Show)
 
@@ -59,8 +57,6 @@ data St = St
     , sSpinner :: SpinnerState
     }
   deriving (Show)
-
---------------------------------------------------------------------------------
 
 init :: St
 init = St mempty "" 0 Nothing

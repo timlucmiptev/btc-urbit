@@ -9,8 +9,6 @@ import ClassyPrelude
 import Urbit.Noun.Conversions
 import Urbit.Noun.TH
 
---------------------------------------------------------------------------------
-
 type Tang = [Tank]
 
 data Tank
@@ -43,14 +41,10 @@ deriveNoun ''PlumFmt
 deriveNoun ''Tank
 deriveNoun ''PlumTree
 
---------------------------------------------------------------------------------
-
 data WashCfg = WashCfg
     { wcIndent :: Word
     , wcWidth  :: Word
     }
-
---------------------------------------------------------------------------------
 
 wash :: WashCfg -> Tank -> Wall
 wash _cfg t = [ram t]

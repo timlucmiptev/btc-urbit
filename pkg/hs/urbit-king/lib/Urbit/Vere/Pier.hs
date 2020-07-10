@@ -38,8 +38,6 @@ import qualified Urbit.Vere.Term.API    as Term
 import qualified Urbit.Vere.Term.Demux  as Term
 import qualified Urbit.Vere.Term.Render as Term
 
---------------------------------------------------------------------------------
-
 _ioDrivers = [] :: [IODriver]
 
 setupPierDirectory :: FilePath -> RIO e ()

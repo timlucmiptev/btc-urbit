@@ -25,8 +25,6 @@ import Urbit.King.App     (runApp)
 import qualified Urbit.Time     as Time
 import qualified Urbit.Vere.Log as Log
 
---------------------------------------------------------------------------------
-
 king :: KingId
 king = KingId 0
 

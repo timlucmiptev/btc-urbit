@@ -23,8 +23,6 @@ data TSize = TSize
     , tsTall :: Word
     }
 
---------------------------------------------------------------------------------
-
 {- |
     Get terminal size.  Produces 80x24 as a fallback if unable to figure
     out terminal size.

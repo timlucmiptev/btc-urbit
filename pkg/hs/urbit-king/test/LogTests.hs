@@ -54,8 +54,6 @@ withDb dir (Db dId dEvs dFx) act = do
             Log.writeEffectsRow log k v
         act log
 
---------------------------------------------------------------------------------
-
 tryReadIdentity :: Property
 tryReadIdentity = forAll arbitrary (ioProperty . runApp . runTest)
   where

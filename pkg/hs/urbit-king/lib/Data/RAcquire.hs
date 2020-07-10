@@ -25,8 +25,6 @@ import Data.Typeable           (Typeable)
 
 import RIO (RIO, runRIO)
 
---------------------------------------------------------------------------------
-
 data ReleaseType
     = ReleaseEarly
     | ReleaseNormal
@@ -39,8 +37,6 @@ data Allocated e a
 newtype RAcquire e a
     = RAcquire ((forall b. RIO e b -> RIO e b) -> RIO e (Allocated e a))
 
---------------------------------------------------------------------------------
-
 class MonadRIO m where
     liftRIO :: RIO e a -> m e a
 
@@ -49,8 +45,6 @@ instance MonadRIO RIO where
 
 class MonadAcquire m where
     liftAcquire :: Act.Acquire a -> m a
-
---------------------------------------------------------------------------------
 
 instance Functor (RAcquire e) where
     fmap = liftM
@@ -77,8 +71,6 @@ instance MonadReader e (RAcquire e) where
     ask                  = liftRIO ask
     local f (RAcquire g) = RAcquire $ \restore -> local f (g restore)
 
---------------------------------------------------------------------------------
-
 instance MonadRIO RAcquire where
     liftRIO f = RAcquire $ \restore -> do
         x <- restore f
@@ -102,8 +94,6 @@ instance MonadAcquire (RAcquire e) where
           ReleaseEarly     -> Act.ReleaseEarly
           ReleaseNormal    -> Act.ReleaseNormal
           ReleaseException -> Act.ReleaseException
-
---------------------------------------------------------------------------------
 
 mkRAcquire :: RIO e a
           -> (a -> RIO e ())

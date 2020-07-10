@@ -55,8 +55,6 @@ ringRoundTrip (ThirtyTwoByteString signSeed) (ThirtyTwoByteString cryptSeed) =
   where
     r = Ring signSeed cryptSeed
 
---------------------------------------------------------------------------------
-
 tests :: TestTree
 tests =
   testGroup "Noun"

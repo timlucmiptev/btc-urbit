@@ -73,8 +73,6 @@ bit = BIT
 byt :: Word
 byt = BYT
 
---------------------------------------------------------------------------------
-
 wordBitWidth# :: Word# -> Word#
 wordBitWidth# w = minusWord# BIT## (clz# w)
 
@@ -95,13 +93,9 @@ atomBitWidth# (NatJ# bn) = bigNatBitWidth# bn
 atomBitWidth :: Num a => Natural -> a
 atomBitWidth a = fromIntegral (W# (atomBitWidth# a))
 
---------------------------------------------------------------------------------
-
 {-# INLINE takeBitsWord #-}
 takeBitsWord :: Int -> Word -> Word
 takeBitsWord wid wor = wor .&. (shiftL 1 wid - 1)
-
---------------------------------------------------------------------------------
 
 {-
     A `Pill` is a bytestring without trailing zeros.
@@ -113,8 +107,6 @@ instance Eq Pill where
 
 instance Show Pill where
   show = show . pillBytes
-
---------------------------------------------------------------------------------
 
 strip :: ByteString -> ByteString
 strip buf = BS.take (len - go 0 (len - 1)) buf
@@ -129,8 +121,6 @@ pillBytes = strip . unPill
 
 bytesPill :: ByteString -> Pill
 bytesPill = Pill . strip
-
---------------------------------------------------------------------------------
 
 {-
     Cast a BigNat to a vector without a copy.
@@ -173,8 +163,6 @@ _wordsBigNat v = case VP.length v of
   extract (Vector _ (I# len) (Prim.ByteArray buf)) =
     G.byteArrayToBigNat# buf len
 
---------------------------------------------------------------------------------
-
 -- | Cast a nat to a vector (no copy)
 atomWords :: Natural -> Vector Word
 atomWords = bigNatWords . natBigNat
@@ -195,8 +183,6 @@ bigNatNat bn = case G.sizeofBigNat# bn of
   1# -> NatS# (G.bigNatToWord bn)
   _  -> NatJ# bn
 
---------------------------------------------------------------------------------
-
 _wordBytes :: Word -> ByteString
 _wordBytes wor = BS.reverse $ BS.pack $ go 0 []
  where
@@ -211,15 +197,11 @@ bytesFirstWord buf = go 0 0
   go acc idx =
     if idx >= top then acc else go (acc .|. i idx (BYT * idx)) (idx + 1)
 
---------------------------------------------------------------------------------
-
 _pillWords :: Pill -> Vector Word
 _pillWords = bsToWords . pillBytes
 
 wordsPill :: Vector Word -> Pill
 wordsPill = bytesPill . vecBytes . wordsToBytes
-
---------------------------------------------------------------------------------
 
 wordsToBytes :: Vector Word -> Vector Word8
 wordsToBytes (Vector off sz buf) = Vector (off * BYT) (sz * BYT) buf
@@ -227,8 +209,6 @@ wordsToBytes (Vector off sz buf) = Vector (off * BYT) (sz * BYT) buf
 bsToWords :: ByteString -> Vector Word
 bsToWords bs = VP.generate (1 + BS.length bs `div` BYT)
   $ \i -> bytesFirstWord (BS.drop (i * BYT) bs)
-
---------------------------------------------------------------------------------
 
 vecBytes :: Vector Word8 -> ByteString
 vecBytes (Vector off sz buf) = unsafePerformIO $ do
@@ -247,8 +227,6 @@ vecBytes (Vector off sz buf) = unsafePerformIO $ do
 
 _bytesVec :: ByteString -> Vector Word8
 _bytesVec bs = VP.generate (BS.length bs) (BS.index bs)
-
---------------------------------------------------------------------------------
 
 natPill :: Natural -> Pill
 natPill = wordsPill . atomWords

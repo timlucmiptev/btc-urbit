@@ -2,8 +2,6 @@
 
 module Main (main) where
 
---------------------------------------------------------------------------------
-
 import Data.IORef
 import Numeric.Natural
 import Prelude
@@ -103,8 +101,6 @@ prop_fast_atom_bytes_correct x = F.atomBytes x == S.atomBytes x
 
 prop_fast_atom_export_correct :: Natural -> Bool
 prop_fast_atom_export_correct x = F.exportBytes x == S.atomBytes x
-
---------------------------------------------------------------------------------
 
 failed :: IORef Int
 failed = unsafePerformIO (newIORef 0)
