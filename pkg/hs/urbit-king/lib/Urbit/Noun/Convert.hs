@@ -96,12 +96,12 @@ instance Monoid (Result a) where
 
 -- "Parser" --------------------------------------------------------------------
 
-type Failure f r   = ParseStack -> String -> f r
-type Success a f r = a -> f r
+type Failure   r = ParseStack -> String -> r
+type Success a r = a -> r
 
-newtype Parser a = Parser {
-  runParser :: forall f r.  ParseStack -> Failure f r -> Success a f r -> f r
-}
+data Parser a = Parser
+    { runParser :: forall r.  ParseStack -> Failure r -> Success a r -> r
+    }
 
 named :: Text -> Parser a -> Parser a
 named nm (Parser cb) =
