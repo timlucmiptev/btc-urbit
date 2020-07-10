@@ -6,7 +6,7 @@ module Urbit.Vere.Ames (ames) where
 
 import Urbit.Prelude
 
-import Control.Monad.Extra       hiding (mapM_)
+-- import Control.Monad.Extra       hiding (mapM_)
 import Network.Socket            hiding (recvFrom, sendTo)
 import Network.Socket.ByteString
 import Urbit.Arvo                hiding (Fake)
@@ -135,7 +135,7 @@ ames inst who isFake enqueueEv stderr =
         cancel aSendingThread
         cancel aListener
         socket <- atomically $ readTVar aSocket
-        io $ maybeM (pure ()) (close') (pure socket)
+        io $ maybe (pure ()) close' socket
 
     bindSock :: TVar (Maybe Socket) -> RIO e ()
     bindSock socketVar = getBindAddr >>= doBindSocket
