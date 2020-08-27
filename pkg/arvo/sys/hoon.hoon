@@ -6732,7 +6732,6 @@
     {$dtwt p/hoon}                                      ::  .?  nock 3
   ::                                            ::::::  type conversion
     {$ktbr p/hoon}                                      ::  ^|  contravariant
-    {$ktcn p/hoon}                                      ::  ^%  enter test mode
     {$ktdt p/hoon q/hoon}                               ::  ^.  self-cast
     {$ktls p/hoon q/hoon}                               ::  ^+  expression cast
     {$kthp p/spec q/hoon}                               ::  ^-  structure cast
@@ -10368,7 +10367,6 @@
       =+  tal=$(gen q.gen, gol %noun)
       [(nice (cell p.hed p.tal)) (cons q.hed q.tal)]
     ::
-        {$ktcn *}  $(fab |, gen p.gen)
         {$brcn *}  (grow %gold p.gen %dry [%$ 1] q.gen)
         {$brvt *}  (grow %gold p.gen %wet [%$ 1] q.gen)
     ::
@@ -10547,7 +10545,6 @@
       =+  tal=$(gen q.gen, gol %noun)
       [(nice (cell p.hed p.tal)) (cell q.hed q.tal)]
     ::
-        {$ktcn *}  $(fab |, gen p.gen)
         {$brcn *}  (grow %gold p.gen %dry [%$ 1] q.gen)
         {$brvt *}  (grow %gold p.gen %wet [%$ 1] q.gen)
         {$cnts *}  (~(mull et p.gen q.gen) gol dox)
@@ -10922,7 +10919,6 @@
     ^-  type
     ?-  gen
       {^ *}      (cell $(gen p.gen) $(gen q.gen))
-      {$ktcn *}  $(fab |, gen p.gen)
       {$brcn *}  (core sut [p.gen %dry %gold] sut *seminoun q.gen)
       {$brvt *}  (core sut [p.gen %wet %gold] sut *seminoun q.gen)
       {$cnts *}  ~(play et p.gen q.gen)
@@ -13797,7 +13793,6 @@
                   ['~' (rune sig %ktsg expa)]
                   ['=' (rune tis %ktts expj)]
                   ['?' (rune wut %ktwt expa)]
-                  ['%' (rune cen %ktcn expa)]
                   ['*' (rune tar %kttr exqa)]
                   [':' (rune col %ktcl exqa)]
               ==
