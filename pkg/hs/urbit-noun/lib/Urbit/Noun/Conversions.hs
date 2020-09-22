@@ -26,7 +26,7 @@ import Urbit.Noun.Convert
 import Urbit.Noun.Core
 import Urbit.Noun.TH
 
-import Data.LargeWord   (LargeKey, Word128, Word256)
+import Data.LargeWord   (LargeKey(..), Word128, Word256)
 import GHC.Exts         (chr#, isTrue#, leWord#, word2Int#)
 import GHC.Natural      (Natural)
 import GHC.Types        (Char(C#))
@@ -85,7 +85,7 @@ instance FromNoun Cord where
 -- Decimal Cords ---------------------------------------------------------------
 
 newtype UD = UD { unUD :: Word }
-  deriving newtype (Eq, Ord, Show, Enum, Real, Integral, Num)
+  deriving newtype (Eq, Ord, Show, Enum, Real, Integral, Num, NFData)
 
 instance ToNoun UD where
   toNoun = toNoun . Cord . tshow . unUD
@@ -133,7 +133,7 @@ convertFromU fetch prefix length = \case
 
 -- @uv
 newtype UV = UV { unUV :: Atom }
-  deriving newtype (Eq, Ord, Show, Num, Enum, Real, Integral)
+  deriving newtype (Eq, Ord, Show, Num, Enum, Real, Integral, NFData)
 
 instance ToNoun UV where
     toNoun = toNoun . Cord . pack . toUV . fromIntegral . unUV
@@ -194,7 +194,7 @@ uvCharNum = \case
 
 -- @uw
 newtype UW = UW { unUW :: Atom }
-  deriving newtype (Eq, Ord, Show, Num, Enum, Real, Integral)
+  deriving newtype (Eq, Ord, Show, Num, Enum, Real, Integral, NFData)
 
 instance ToNoun UW where
   toNoun = toNoun . Cord . pack . toUW . fromIntegral . unUW
@@ -306,13 +306,14 @@ instance FromNoun Char where
 -- Tour ------------------------------------------------------------------------
 
 newtype Tour = Tour [Char]
-  deriving newtype (Eq, Ord, Show, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, Show, ToNoun, FromNoun, NFData)
 
 
 -- Double Jammed ---------------------------------------------------------------
 
 newtype Jammed a = Jammed a
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic)
+  deriving newtype (NFData)
 
 instance ToNoun a => ToNoun (Jammed a) where
   toNoun (Jammed a) = Atom $ jam $ toNoun a
@@ -333,7 +334,7 @@ type Word512 = LargeKey Word256 Word256
 data AtomCell a c
     = ACAtom a
     | ACCell c
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 instance (ToNoun a, ToNoun c) => ToNoun (AtomCell a c) where
   toNoun (ACAtom a) = toNoun a
@@ -350,7 +351,7 @@ instance (FromNoun a, FromNoun c) => FromNoun (AtomCell a c) where
 data Lenient a
     = FailParse Noun
     | GoodParse a
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 instance FromNoun a => FromNoun (Lenient a) where
   parseNoun n =
@@ -372,7 +373,8 @@ instance ToNoun a => ToNoun (Lenient a) where
 -- Todo -- Debugging Hack ------------------------------------------------------
 
 newtype Todo a = Todo a
-  deriving newtype (Eq, Ord, ToNoun)
+  deriving (Generic)
+  deriving newtype (Eq, Ord, ToNoun, NFData)
 
 instance Show (Todo a) where
   show (Todo _) = "TODO"
@@ -394,7 +396,7 @@ instance FromNoun a => FromNoun (Todo a) where
     case, therefore `a` must always be cell type.
 -}
 data Nullable a = None | Some a
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 instance ToNoun a => ToNoun (Nullable a) where
   toNoun = toNoun . \case None   -> ACAtom ()
@@ -429,7 +431,7 @@ instance FromNoun a => FromNoun [a] where
     A `tape` is a list of utf8 bytes.
 -}
 newtype Tape = Tape { unTape :: Text }
-  deriving newtype (Eq, Ord, Show, Semigroup, Monoid, IsString)
+  deriving newtype (Eq, Ord, Show, Semigroup, Monoid, IsString, NFData)
 
 instance ToNoun Tape where
   toNoun = toNoun . (unpack :: ByteString -> [Word8]) . encodeUtf8 . unTape
@@ -464,7 +466,8 @@ type Wall = [Tape]
 -- Big Cord -- Don't Print -----------------------------------------------------
 
 newtype BigCord = BigCord Cord
-  deriving newtype (Eq, Ord, ToNoun, FromNoun, IsString)
+  deriving (Generic)
+  deriving newtype (Eq, Ord, ToNoun, FromNoun, IsString, NFData)
 
 instance Show BigCord where
   show (BigCord (Cord t)) = show (take 32 t <> "...")
@@ -473,7 +476,8 @@ instance Show BigCord where
 -- Big Tape -- Don't Print -----------------------------------------------------
 
 newtype BigTape = BigTape Tape
-  deriving newtype (Eq, Ord, ToNoun, FromNoun, IsString)
+  deriving (Generic)
+  deriving newtype (Eq, Ord, ToNoun, FromNoun, IsString, NFData)
 
 instance Show BigTape where
   show (BigTape (Tape t)) = show (take 32 t <> "...")
@@ -482,7 +486,7 @@ instance Show BigTape where
 -- Bytes -----------------------------------------------------------------------
 
 newtype Bytes = MkBytes { unBytes :: ByteString }
-  deriving newtype (Eq, Ord, Show)
+  deriving newtype (Eq, Ord, Show, NFData)
 
 instance ToNoun Bytes where
     toNoun = Atom . bytesAtom . unBytes
@@ -494,7 +498,7 @@ instance FromNoun Bytes where
 -- Octs ------------------------------------------------------------------------
 
 newtype Octs = Octs { unOcts :: ByteString }
-  deriving newtype (Eq, Ord, Show, IsString)
+  deriving newtype (Eq, Ord, Show, IsString, NFData)
 
 instance ToNoun Octs where
   toNoun (Octs bs) =
@@ -519,7 +523,7 @@ instance FromNoun Octs where
 -- File Contents -- Don't Print ------------------------------------------------
 
 newtype File = File { unFile :: Octs }
-  deriving newtype (Eq, Ord, IsString, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, IsString, ToNoun, FromNoun, NFData)
 
 instance Show File where
   show (File (Octs bs)) = show (take 32 bs <> "...")
@@ -531,7 +535,7 @@ instance Show File where
     Knot (@ta) is an array of Word8 encoding an ASCII string.
 -}
 newtype Knot = MkKnot { unKnot :: Text }
-  deriving newtype (Eq, Ord, Show, Semigroup, Monoid, IsString)
+  deriving newtype (Eq, Ord, Show, Semigroup, Monoid, IsString, NFData)
 
 instance ToNoun Knot where
   toNoun = textToUtf8Atom . unKnot
@@ -552,7 +556,7 @@ instance FromNoun Knot where
         ([a-z][a-z0-9]*(-[a-z0-9]+)*)?
 -}
 newtype Term = MkTerm { unTerm :: Text }
-  deriving newtype (Eq, Ord, Show, Semigroup, Monoid, IsString)
+  deriving newtype (Eq, Ord, Show, Semigroup, Monoid, IsString, NFData)
 
 instance ToNoun Term where -- XX TODO
   toNoun = textToUtf8Atom . unTerm
@@ -573,6 +577,8 @@ instance FromNoun Term where -- XX TODO
 newtype Ship = Ship Word128 -- @p
   deriving newtype (Eq, Ord, Show, Enum, Real, Integral, Num, ToNoun, FromNoun)
 
+instance NFData Ship where
+  rnf (Ship x) = seq x ()
 
 -- Path ------------------------------------------------------------------------
 
@@ -615,7 +621,7 @@ filePathToPath fp = Path path
 -- Mug -------------------------------------------------------------------------
 
 newtype Mug = Mug Word32
-  deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun, NFData)
 
 
 -- Bool ------------------------------------------------------------------------
@@ -660,6 +666,9 @@ wordToNoun = Atom . fromIntegral
 nounToWord :: forall a. (Bounded a, Integral a) => Noun -> Parser a
 nounToWord = parseNoun >=> atomToWord
 
+instance (NFData x, NFData y) => NFData (LargeKey x y) where
+  rnf (LargeKey l r) = rnf l `seq` rnf r `seq` ()
+
 instance ToNoun Word    where toNoun = wordToNoun
 instance ToNoun Word8   where toNoun = wordToNoun
 instance ToNoun Word16  where toNoun = wordToNoun
@@ -699,7 +708,7 @@ instance FromNoun a => FromNoun (Maybe a) where
 data Each a b
     = EachYes a
     | EachNo b
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 instance (ToNoun a, ToNoun b) => ToNoun (Each a b) where
     toNoun (EachYes x) = C (A 0) (toNoun x)
@@ -850,6 +859,13 @@ instance ( FromNoun a, FromNoun b, FromNoun c, FromNoun d, FromNoun e
     (p, tail)                <- parseNoun n
     (q, r, s, t, u, v, w, x) <- parseNoun tail
     pure (p, q, r, s, t, u, v, w, x)
+
+instance (NFData a, NFData b, NFData c, NFData d, NFData e, NFData f, NFData g,
+          NFData h, NFData i, NFData j) =>
+         NFData (a, b, c, d, e, f, g, h, i, j) where
+  rnf (a, b, c, d, e, f, g, h, i, j) =
+    rnf a `seq` rnf b `seq` rnf c `seq` rnf d `seq` rnf e `seq` rnf f `seq`
+    rnf g `seq` rnf h `seq` rnf i `seq` rnf j `seq` ()
 
 instance ( ToNoun a, ToNoun b, ToNoun c, ToNoun d, ToNoun e, ToNoun f, ToNoun g
          , ToNoun h, ToNoun i, ToNoun j

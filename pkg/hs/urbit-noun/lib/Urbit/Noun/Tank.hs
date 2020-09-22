@@ -12,26 +12,12 @@ import Urbit.Noun.Core
 
 --------------------------------------------------------------------------------
 
-type Tang = [Tank]
-
 data TankTree
     = Leaf Tape
     | Plum Plum
     | Palm (Tape, Tape, Tape, Tape) [TankTree]
     | Rose (Tape, Tape, Tape) [TankTree]
   deriving (Eq, Ord, Show)
-
-newtype Tank = Tank { tankTree :: TankTree }
- deriving newtype (Eq, Ord, Show)
-
-instance ToNoun Tank where
-  toNoun (Tank t) = toNoun t
-
-instance FromNoun Tank where
-  parseNoun n@(Atom _) = do
-    Cord txt <- parseNoun n
-    pure $ Tank $ Leaf $ Tape txt
-  parseNoun n = Tank <$> parseNoun n
 
 data WideFmt = WideFmt { delimit :: Cord, enclose :: Maybe (Cord, Cord) }
   deriving (Eq, Ord, Show)
@@ -55,6 +41,20 @@ deriveNoun ''TallFmt
 deriveNoun ''PlumFmt
 deriveNoun ''TankTree
 deriveNoun ''PlumTree
+
+type Tang = [Tank]
+
+newtype Tank = Tank { tankTree :: TankTree }
+ deriving newtype (Eq, Ord, Show, NFData)
+
+instance ToNoun Tank where
+  toNoun (Tank t) = toNoun t
+
+instance FromNoun Tank where
+  parseNoun n@(Atom _) = do
+    Cord txt <- parseNoun n
+    pure $ Tank $ Leaf $ Tape txt
+  parseNoun n = Tank <$> parseNoun n
 
 --------------------------------------------------------------------------------
 

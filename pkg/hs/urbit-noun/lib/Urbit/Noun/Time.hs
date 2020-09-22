@@ -5,10 +5,9 @@
 module Urbit.Noun.Time where
 
 import Control.Lens
-import Prelude
+import ClassyPrelude
 
 import Data.Bits              (shiftL, shiftR, (.&.))
-import Data.List              (intercalate)
 import Data.Time.Calendar     (toGregorian)
 import Data.Time.Clock        (DiffTime, UTCTime(..))
 import Data.Time.Clock        (diffTimeToPicoseconds, picosecondsToDiffTime)
@@ -19,20 +18,19 @@ import Data.Word              (Word64)
 import Text.Printf            (printf)
 import Urbit.Noun             (FromNoun, ToNoun)
 
-
 -- Types -----------------------------------------------------------------------
 
 newtype Gap = Gap { _fractoSecs :: Integer }
-  deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun, NFData)
 
 newtype Unix = Unix { _sinceUnixEpoch :: Gap }
-  deriving newtype (Eq, Ord, Show, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, Show, ToNoun, FromNoun, NFData)
 
 newtype Wen = Wen { _sinceUrbitEpoch :: Gap }
-  deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, Show, Num, ToNoun, FromNoun, NFData)
 
 newtype Date = MkDate { _dateWen :: Wen }
-  deriving newtype (Eq, Ord, Num, ToNoun, FromNoun)
+  deriving newtype (Eq, Ord, Num, ToNoun, FromNoun, NFData)
 
 
 -- Record Lenses ---------------------------------------------------------------

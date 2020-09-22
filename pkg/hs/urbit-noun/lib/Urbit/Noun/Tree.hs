@@ -30,27 +30,7 @@ data NounVal a = NounVal
     { non ∷ Noun
     , val ∷ !a
     }
-
-data HoonTreeNode a = NTN
-    { n ∷ NounVal a
-    , l ∷ HoonTree a
-    , r ∷ HoonTree a
-    }
-  deriving (Eq, Ord, Show)
-
-data HoonTree a = E | Node (HoonTreeNode a)
-  deriving (Eq, Ord, Show)
-
-pattern N n l r = Node (NTN n l r)
-
-newtype HoonSet a = HoonSet { unHoonSet ∷ HoonTree a }
-  deriving newtype (Eq, Ord, Show, FromNoun, ToNoun)
-
-newtype HoonMap k v = HoonMap { unHoonMap ∷ HoonTree (k, v) }
-  deriving newtype (Eq, Ord, Show, FromNoun, ToNoun)
-
-
--- Instances -------------------------------------------------------------------
+  deriving (Generic, NFData)
 
 instance Eq (NounVal a) where
   (==) = on (==) non
@@ -67,6 +47,22 @@ instance Show a ⇒ Show (NounVal a) where
 instance FromNoun a ⇒ FromNoun (NounVal a) where
     parseNoun x = NounVal x <$> parseNoun x
 
+data HoonTreeNode a = NTN
+    { n ∷ NounVal a
+    , l ∷ HoonTree a
+    , r ∷ HoonTree a
+    }
+  deriving (Eq, Ord, Show)
+
+data HoonTree a = E | Node (HoonTreeNode a)
+  deriving (Eq, Ord, Show)
+
+deriveNoun ''HoonTreeNode
+
+instance NFData a => NFData (HoonTree a) where
+  rnf E = ()
+  rnf (Node n) = rnf n
+
 instance ToNoun a ⇒ ToNoun (HoonTree a) where
     toNoun E        = A 0
     toNoun (Node n) = toNoun n
@@ -75,8 +71,13 @@ instance FromNoun a ⇒ FromNoun (HoonTree a) where
     parseNoun (A 0) = pure E
     parseNoun n     = Node <$> parseNoun n
 
-deriveNoun ''HoonTreeNode
+pattern N n l r = Node (NTN n l r)
 
+newtype HoonSet a = HoonSet { unHoonSet ∷ HoonTree a }
+  deriving newtype (Eq, Ord, Show, FromNoun, ToNoun, NFData)
+
+newtype HoonMap k v = HoonMap { unHoonMap ∷ HoonTree (k, v) }
+  deriving newtype (Eq, Ord, Show, FromNoun, ToNoun, NFData)
 
 -- Mug -------------------------------------------------------------------------
 

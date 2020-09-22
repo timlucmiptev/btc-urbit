@@ -37,6 +37,12 @@ data Noun
     = NCell Int Word Noun Noun
     | NAtom Int Atom
 
+-- Leave the hash to be lazily evaluated in the Noun NFData structure since it
+-- often isn't needed.
+instance NFData Noun where
+  rnf (NCell _ _ l r) = rnf l `seq` rnf r `seq` ()
+  rnf (NAtom _ a) = rnf a `seq` ()
+
 pattern Cell x y <- NCell _ _ x y where Cell = mkCell
 pattern Atom a   <- NAtom _ a     where Atom = mkAtom
 

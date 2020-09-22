@@ -125,7 +125,7 @@ data Deco
     | DecoBr
     | DecoUn
     | DecoNull
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 data Tint
     = TintR
@@ -137,7 +137,7 @@ data Tint
     | TintK
     | TintW
     | TintNull
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 data Stye = Stye
     { deco :: (HoonSet Deco)
@@ -245,7 +245,7 @@ data Ef
     = EfVane VaneEf
     | EfVega Cord EvilPath -- second path component, rest of path
     | EfExit Cord EvilPath -- second path component, rest of path
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Generic, NFData)
 
 instance ToNoun Ef where
   toNoun = \case
