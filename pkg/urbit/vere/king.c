@@ -5,8 +5,10 @@
 #include <curl/curl.h>
 #include <unistd.h>
 #include <uv.h>
+
 #include "all.h"
 #include "vere/vere.h"
+#include "ur/ur.h"
 
 #include "ivory.h"
 
@@ -692,6 +694,52 @@ _king_loop_exit()
   unlink(u3K.certs_c);
 }
 
+static void
+_king_boot_ivory(void)
+{
+  c3_d  len_d;
+  c3_y* byt_y;
+
+  if ( u3_Host.ops_u.lit_c ) {
+    if ( c3n == u3u_mmap_read("lite", u3_Host.ops_u.lit_c, &len_d, &byt_y) ) {
+      u3l_log("lite: unable to load ivory pill at %s\n",
+              u3_Host.ops_u.lit_c);
+      exit(1);
+    }
+  }
+  else {
+    len_d = u3_Ivory_pill_len;
+    byt_y = u3_Ivory_pill;
+  }
+
+  {
+    ur_dict32_t  dic_u = {0};
+    u3_noun        pil;
+
+    ur_dict32_grow((ur_root_t*)0, &dic_u, ur_fib27, ur_fib28);
+
+    if ( c3n == u3s_cue_xeno_unsafe(&dic_u, len_d, byt_y, &pil) ) {
+      u3l_log("lite: unable to cue ivory pill\r\n");
+      exit(1);
+    }
+
+    ur_dict_free((ur_dict_t*)&dic_u);
+
+    if ( c3n == u3v_boot_lite(pil)) {
+      u3l_log("lite: boot failed\r\n");
+      exit(1);
+    }
+  }
+
+  if ( u3_Host.ops_u.lit_c ) {
+    if ( c3n == u3u_munmap(len_d, byt_y) ) {
+      u3l_log("lite: unable to unmap ivory pill at %s\n",
+              u3_Host.ops_u.lit_c);
+      exit(1);
+    }
+  }
+}
+
 /* u3_king_commence(): start the daemon
 */
 void
@@ -704,10 +752,11 @@ u3_king_commence()
   uv_timer_init(u3L, &u3K.tim_u);
 
   //  start up a "fast-compile" arvo for internal use only
-  //  (with hashboard always disabled)
+  //  (with hashboard and sample-profiling always disabled)
   //
   sag_w = u3C.wag_w;
   u3C.wag_w |= u3o_hashless;
+  u3C.wag_w &= ~u3o_debug_cpu;
 
   u3m_boot_lite();
 
@@ -726,21 +775,7 @@ u3_king_commence()
 
   //  boot the ivory pill
   //
-  {
-    u3_noun lit;
-
-    if ( 0 != u3_Host.ops_u.lit_c ) {
-      lit = u3m_file(u3_Host.ops_u.lit_c);
-    }
-    else {
-      lit = u3i_bytes(u3_Ivory_pill_len, u3_Ivory_pill);
-    }
-
-    if ( c3n == u3v_boot_lite(lit)) {
-      u3l_log("lite: boot failed\r\n");
-      exit(1);
-    }
-  }
+  _king_boot_ivory();
 
   //  disable core dumps (due to lmdb size)
   //
