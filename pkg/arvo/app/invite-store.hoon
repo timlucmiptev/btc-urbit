@@ -35,8 +35,15 @@
     ?>  (team:title our.bol src.bol)
     =^  cards  state
       ?+  mark  (on-poke:def mark vase)
-        %json           (poke-invite-action:ic (json-to-action !<(json vase)))
-        %invite-action  (poke-invite-action:ic !<(invite-action vase))
+          %json
+        (poke-invite-action:ic (json-to-action !<(json vase)))
+      ::
+          %invite-action
+        (poke-invite-action:ic !<(invite-action vase))
+      ::
+          %import
+        ?>  ?=(@ q.vase)
+        (poke-import:ic q.vase)
       ==
     [cards this]
   ::
@@ -61,6 +68,7 @@
       [%x %all ~]         (peek-x-all:ic t.t.path)
       [%x %invitatory *]  (peek-x-invitatory:ic t.t.path)
       [%x %invite *]      (peek-x-invite:ic t.t.path)
+      [%x %export ~]      ``noun+!>((jam state))
     ==
   ::
   ++  on-agent  on-agent:def
@@ -97,6 +105,12 @@
     ~
   =/  invite=(unit invite)  (~(get by u.invitatory) uid)
   [~ ~ %noun !>(invite)]
+::
+++  poke-import
+  |=  jammed=@
+  ^-  (quip card _state)
+  =/  sty=state-zero  ;;(state-zero (cue jammed))
+  [~ sty]
 ::
 ++  poke-invite-action
   |=  action=invite-action
