@@ -401,6 +401,12 @@
       =^  cards  state
         (poke-publish-action:main !<(action vas))
       [cards this]
+    ::
+        %import
+      ?>  ?=(@ q.vas)
+      =^  cards  state
+        (poke-import:main q.vas)
+      [cards this]
     ==
   ::
   ++  on-watch
@@ -409,7 +415,7 @@
     ?+    pax  (on-watch:def pax)
         [%http-response *]  [~ this]
         [%primary ~]        [~ this]
-        [%notebook @ ~]
+        [%notebook @ *]
       =^  cards  state
         (watch-notebook:main pax)
       [cards this]
@@ -461,6 +467,9 @@
       =/  book  (~(get by books) u.host book-name)
       ?~  book  ~
       ``noun+!>(u.book)
+    ::
+        [%x %export ~]
+      ``noun+!>((jam state))
     ==
   ::
   ++  on-agent
@@ -1441,6 +1450,48 @@
       u.comment
     ==
   ==
+::
+++  write-notebook
+  |=  [name=@tas book=notebook]
+  ^-  (list card)
+  =/  prefix  /app/publish/notebooks/[name]
+  =/  info=notebook-info
+    :*  title.book
+        description.book
+        comments.book
+        writers.book
+        subscribers.book
+    ==
+  :-  (write-file (weld prefix /publish-info) %publish-info !>(info))
+  %-  zing
+  %+  turn  ~(tap by notes.book)
+  |=  [note-name=@tas =note]
+  ^-  (list card)
+  :-  (write-file (weld prefix /[note-name]/udon) %udon !>(file.note))
+  %+  turn  ~(tap by comments.note)
+  |=  [wen=@da =comment]
+  ^-  card
+  %^  write-file  (weld prefix /[note-name]/(scot %da wen)/publish-comment)
+    %publish-comment
+  !>(comment)
+::
+++  poke-import
+  |=  jammed=@
+  ^-  (quip card _state)
+  =/  sty  ;;([%6 state-three] (cue jammed))
+  :_  sty
+  %+  roll  ~(tap by books.sty)
+  |=  [[[host=@p book=@tas] =notebook] out=(list card)]
+  ?:  =(our.bol host)
+    (weld out (write-notebook book notebook))
+  =/  wen=(unit @da)  (get-last-update host book)
+  =/  pax=path
+    ?~  wen
+      /notebook/[book]
+    /notebook/[book]/(scot %da u.wen)
+  :_  out
+  ^-  card
+  [%pass /subscribe/(scot %p host)/[book] %agent [host %publish] %watch pax]
 ::
 ++  poke-publish-action
   |=  act=action
