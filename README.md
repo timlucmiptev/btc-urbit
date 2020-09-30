@@ -1,4 +1,11 @@
-# Urbit
+# Fork: btc-urbit
+
+## Custom Files
+- `sys/zuse.hoon`
+  * new `decompress-point` from [https://github.com/yosoyubik/urbit/blob/decompress-point/pkg/arvo/sys/zuse.hoon]
+- `ligb/bip32.hoon` from [https://github.com/urbit/urbit/blob/c473a4a35f2fdfde7b31f8b0ba5cbd7f54b0f223/pkg/arvo/lib/bip32.hoon]
+- btc rpc?
+
 
 [Urbit](https://urbit.org) is a personal server stack built from scratch. It
 has an identity layer (Azimuth), virtual machine (Vere), and operating system
@@ -11,7 +18,7 @@ This repository contains:
 
 - The [Arvo OS][arvo]
 - [herb][herb], a tool for Unix control of an Urbit ship
-- Source code for [Landscape's web interface][land]
+- Source code for [Landscape's web interface][land
 - Source code for the [vere][vere] virtual machine.
 
 For more on the identity layer, see [Azimuth][azim]. To manage your Urbit
