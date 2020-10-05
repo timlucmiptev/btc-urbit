@@ -4224,7 +4224,6 @@
       ++  decompress-point
         |=  dat=@
         ^-  pont
-        ~&  "decompress point"
         =+  x=(end 3 w dat)
         ?>  =(3 (mod ^p 4))
         =+  y=(exp.p (div +(^p) 4) :(sum.p (exp.p 3 x) (pro.p a x) b))
