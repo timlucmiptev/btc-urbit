@@ -1,0 +1,32 @@
+{
+  "name": "@urbit/api",
+  "version": "1.1.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/urbit/urbit.git",
+    "directory": "pkg/npm/api"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d",
+  "scripts": {
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "onchange './**/*.ts' -e './dist/**' -- npm run build",
+    "build": "npm run clean && tsc -p tsconfig.json",
+    "clean": "rm -rf dist/*"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.12.5",
+    "@types/lodash": "^4.14.168",
+    "@urbit/eslint-config": "^1.0.0",
+    "big-integer": "^1.6.48",
+    "immer": "^9.0.1",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "onchange": "^7.1.0"
+  }
+}

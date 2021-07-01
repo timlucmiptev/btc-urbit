@@ -3,7 +3,7 @@
 ::  mounts HTTP endpoints for Landscape (and third-party) user applications
 ::
 /-  srv=file-server, glob
-/+  *server, default-agent, verb, dbug
+/+  *server, default-agent, verb, dbug, version
 |%
 +$  card  card:agent:gall
 +$  serving    (map url-base=path [=content public=? single-page=?])
@@ -12,8 +12,8 @@
       [%glob =glob:glob]
   ==
 ::
-+$  state-3
-  $:  %3
++$  state-4
+  $:  %4
       =configuration:srv
       =serving
   ==
@@ -22,7 +22,7 @@
 %+  verb  |
 %-  agent:dbug
 ::
-=|  state-3
+=|  state-4
 =*  state  -
 ^-  agent:gall
 |_  =bowl:gall
@@ -42,6 +42,7 @@
       ==
   :~  (connect /)
       (connect /'~landscape')
+      [%pass /serve-who %arvo %e %serve [~ /who] %home /gen/who/hoon ~]
   ==
   ::
   ++  connect
@@ -56,6 +57,7 @@
   ^-  (quip card _this)
   |^
   =+  !<(old-state=versioned-state old-vase)
+  =|  cards=(list card)
   =?  old-state  ?=(%0 -.old-state)
     %=    old-state
         -  %1
@@ -79,16 +81,23 @@
       ^-  [^content ? ?]
       [content public %.y]
     ==
-  ?>  ?=(%3 -.old-state)
-  [~ this(state old-state)]
+  =?  cards  ?=(%3 -.old-state)
+    :_  cards
+    [%pass /serve-who %arvo %e %serve [~ /who] %home /gen/who/hoon ~]
+  =?  old-state  ?=(%3 -.old-state)
+    old-state(- %4)
+  ?>  ?=(%4 -.old-state)
+  [cards this(state old-state)]
   ::
   +$  serving-0  (map url-base=path [=clay=path public=?])
   +$  serving-1  (map url-base=path [=content public=?])
+  +$  serving-3  (map url-base=path [=content public=? single-page=?])
   +$  versioned-state
     $%  state-0
         [%1 state-1]
         [%2 state-1]
         state-3
+        state-4
     ==
   ::
   +$  state-0
@@ -99,6 +108,11 @@
   +$  state-1
     $:  =configuration:srv
         serving=serving-1
+    ==
+  +$  state-3
+    $:  %3
+        =configuration:srv
+        serving=serving-3
     ==
   --
 ::
@@ -188,8 +202,11 @@
     ?:  ?=([%'~landscape' %js %session ~] site.req-line)
       %+  require-authorization-simple:app
         inbound-request
-      %-  js-response:gen
-      (as-octt:mimes:html "window.ship = '{+:(scow %p our.bowl)}';")
+      %.  %-  as-octs:mimes:html
+          (rap 3 'window.ship = "' (rsh 3 (scot %p our.bowl)) '";' ~)
+      %*  .  js-response:gen
+        cache  %.n
+      ==
     ::
     =/  [payload=simple-payload:http public=?]  (get-file req-line is-file)
     ?:  public  payload
@@ -213,12 +230,17 @@
               (lowercase (weld path.content.u.content suffix.u.content))
           ==
         ?.  .^(? %cu scry-path)  [not-found:gen %.n]
+        ?:  ?=([~ %woff2] ext.req-line)
+          :_  public.u.content
+          [[200 [['content-type' '/font/woff2'] ~]] `.^(octs %cx scry-path)]
         =/  file  (as-octs:mimes:html .^(@ %cx scry-path))
         :_  public.u.content
         ?+  ext.req-line  not-found:gen
             [~ %js]    (js-response:gen file)
             [~ %css]   (css-response:gen file)
             [~ %png]   (png-response:gen file)
+            [~ %svg]   (svg-response:gen file)
+            [~ %ico]   (ico-response:gen file)
           ::
               [~ %html]
             %.  file
@@ -234,10 +256,13 @@
         ?~  data
           [not-found:gen %.n]
         :_  public.u.content
-        =/  mime-type=@t  (rsh 3 1 (crip <p.u.data>))
-        ::  Should maybe inspect to see how long cache should hold
-        ::
-        [[200 ['content-type' mime-type] max-1-da:gen ~] `q.u.data]
+        =/  mime-type=@t  (rsh 3 (crip <p.u.data>))
+        =/  headers
+          :~  content-type+mime-type 
+              max-1-wk:gen 
+              'service-worker-allowed'^'/'
+          ==
+        [[200 headers] `q.u.data]
       ==
     ::
     ++  lowercase
@@ -263,7 +288,10 @@
     ++  match-content-path
       |=  [pax=path =^serving is-file=?]
       ^-  (unit [content path ?])
-      %-  ~(rep by serving)
+      %+  roll
+        %+  sort  ~(tap by serving)
+        |=  [[a=path *] [b=path *]]
+        (gth (lent a) (lent b))
       |=  $:  [url-base=path =content public=? spa=?]
               out=(unit [content path ?])
           ==
@@ -320,24 +348,15 @@
 ++  on-peek
   |=  =path
   ^-  (unit (unit cage))
-  |^
   ?+  path  (on-peek:def path)
-    [%x %clay %base %hash ~]  ``hash+!>(base-hash)
+      [%x %clay %base %hash ~]
+    =/  versions  (base-hash:version [our now]:bowl)
+    ``hash+!>(?~(versions 0v0 (end [0 25] i.versions)))
+  ::
+      [%x %url *]
+    =/  url  t.t.path
+    ``noun+!>((~(has by serving) url))
   ==
-  ::  stolen from +trouble
-  ::  TODO: move to a lib?
-  ++  base-hash
-    ^-  @uv
-    =+  .^  ota=(unit [=ship =desk =aeon:clay])
-            %gx  /(scot %p our.bowl)/hood/(scot %da now.bowl)/kiln/ota/noun
-        ==
-    ?~  ota
-      *@uv
-    =/  parent  (scot %p ship.u.ota)
-    =+  .^(=cass:clay %cs /[parent]/[desk.u.ota]/1/late/foo)
-    %^  end  0  25
-    .^(@uv %cz /[parent]/[desk.u.ota]/(scot %ud ud.cass))
-  --
 ++  on-agent  on-agent:def
 ++  on-fail   on-fail:def
 --

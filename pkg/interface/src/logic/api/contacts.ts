@@ -1,82 +1,124 @@
-import BaseApi from './base';
+import { Patp } from '@urbit/api';
+import { ContactEditField } from '@urbit/api/contacts';
+import _ from 'lodash';
+import {edit} from '../reducers/contact-update';
+import {doOptimistically} from '../state/base';
+import useContactState from '../state/contact';
 import { StoreState } from '../store/type';
-import { Patp, Path, Enc } from '~/types/noun';
-import { Contact, ContactEdit } from '~/types/contact-update';
-import { GroupPolicy, Resource } from '~/types/group-update';
+import BaseApi from './base';
 
 export default class ContactsApi extends BaseApi<StoreState> {
-  create(
-    name: string,
-    policy: Enc<GroupPolicy>,
-    title: string,
-    description: string
-  ) {
-    return this.viewAction({
-      create: {
-        name,
-        policy,
-        title,
-        description,
-      },
-    });
+  add(ship: Patp, contact: any) {
+    contact['last-updated'] = Date.now();
+    return this.storeAction({ add: { ship, contact } });
   }
 
-  share(recipient: Patp, path: Patp, ship: Patp, contact: Contact) {
-    return this.viewAction({
-      share: {
-        recipient,
-        path,
-        ship,
-        contact,
-      },
-    });
+  remove(ship: Patp) {
+    return this.storeAction({ remove: { ship } });
   }
 
-  delete(path: Path) {
-    return this.viewAction({ delete: { path } });
-  }
-
-  remove(path: Path, ship: Patp) {
-    return this.viewAction({ remove: { path, ship } });
-  }
-
-  edit(path: Path, ship: Patp, editField: ContactEdit) {
+  edit(ship: Patp, editField: ContactEditField) {
     /* editField can be...
     {nickname: ''}
     {email: ''}
     {phone: ''}
     {website: ''}
-    {notes: ''}
     {color: 'fff'}  // with no 0x prefix
     {avatar: null}
-    {avatar: {url: ''}}
+    {avatar: ''}
+    {add-group: {ship, name}}
+    {remove-group: {ship, name}}
     */
-    return this.hookAction({
+    const action = {
       edit: {
-        path,
         ship,
         'edit-field': editField,
-      },
+        timestamp: Date.now()
+      }
+    }
+    doOptimistically(useContactState, action, this.storeAction.bind(this), [edit])
+  }
+
+  allowShips(ships: Patp[]) {
+    return this.storeAction({
+      allow: {
+        ships
+      }
     });
   }
 
-  invite(resource: Resource, ship: Patp, text = '') {
-    return this.viewAction({
-      invite: { resource, ship, text },
+  allowGroup(ship: string, name: string) {
+    const group = { ship, name };
+    return this.storeAction({
+      allow: {
+        group
+      }
     });
   }
 
-  join(resource: Resource) {
-    return this.viewAction({
-      join: resource,
+  setPublic(setPublic: any) {
+    return this.storeAction({
+      'set-public': setPublic
     });
   }
 
-  private hookAction(data) {
-    return this.action('contact-hook', 'contact-action', data);
+  share(recipient: Patp) {
+    return this.action(
+      'contact-push-hook',
+      'contact-share',
+      { share: recipient }
+    );
   }
 
-  private viewAction(data) {
-    return this.action('contact-view', 'json', data);
+  fetchIsAllowed(entity, name, ship, personal) {
+    const isPersonal = personal ? 'true' : 'false';
+    return this.scry<any>(
+      'contact-store',
+      `/is-allowed/${entity}/${name}/${ship}/${isPersonal}`
+    );
+  }
+
+  async disallowedShipsForOurContact(ships: string[]): Promise<string[]> {
+    return _.compact(
+      await Promise.all(
+        ships.map(
+          async (s) => {
+            const ship = `~${s}`;
+            if(s === window.ship) {
+              return null;
+            }
+            const allowed = await this.fetchIsAllowed(
+              `~${window.ship}`,
+              'personal',
+              ship,
+              true
+            );
+            return allowed ? null : ship;
+          }
+        )
+      )
+    );
+  }
+
+  retrieve(ship: string) {
+    const resource = { ship, name: '' };
+    return this.action('contact-pull-hook', 'pull-hook-action', {
+      add: {
+        resource,
+        ship
+      }
+    });
+  }
+
+  private storeAction(action: any): Promise<any> {
+    return this.action('contact-store', 'contact-update-0', action);
+  }
+
+  private viewAction(threadName: string, action: any) {
+    return this.spider('contact-view-action', 'json', threadName, action);
+  }
+
+  private hookAction(ship: Patp, action: any): Promise<any> {
+    return this.action('contact-push-hook', 'contact-update-0', action);
   }
 }

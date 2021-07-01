@@ -16,9 +16,9 @@
 ::  dep:  depth in chain
 ::  ind:  index at depth
 ::  pif:  parent fingerprint (4 bytes)
-|_  [prv=@ pub=pont cad=@ dep=@ud ind=@ud pif=@]
+|_  [prv=@ pub=point.ecc cad=@ dep=@ud ind=@ud pif=@]
 ::
-+=  keyc  [key=@ cai=@]  ::  prv/pub key + chain code
++$  keyc  [key=@ cai=@]  ::  prv/pub key + chain code
 ::
 ::  elliptic curve operations and values
 ::
@@ -26,7 +26,7 @@
 ::
 ++  ser-p  compress-point.ecc
 ::
-++  n      ^n:ecc
+++  n      n:t.ecc
 ::
 ::  core initialization
 ::
@@ -46,7 +46,7 @@
   +>(pub (decompress-point.ecc key), cad cai)
 ::
 ++  from-public-point
-  |=  [pon=pont cai=@]
+  |=  [pon=point.ecc cai=@]
   +>(pub pon, cad cai)
 ::
 ++  from-extended
@@ -56,8 +56,8 @@
       ++  take
         |=  b=@ud
         ^-  [v=@ x=@]
-        :-  (end 3 b x)
-        (rsh 3 b x)
+        :-  (end [3 b] x)
+        (rsh [3 b] x)
       --
   =^  k  x  (take 33)
   =^  c  x  (take 32)
@@ -81,11 +81,11 @@
 ++  derivation-path
   ;~  pfix
     ;~(pose (jest 'm/') (easy ~))
-  %+  most  net
+  %+  most  fas
   ;~  pose
     %+  cook
       |=(i=@ (add i (bex 31)))
-    ;~(sfix dem say)
+    ;~(sfix dem soq)
   ::
     dem
   ==  ==
@@ -150,7 +150,7 @@
   ::  rare exception, invalid key, go to the next one
   ?:  (gte left n)  $(i +(i))  ::TODO  or child key is "point at infinity"
   %_  +>.$
-    pub   (jc-add.ecc (point left) pub)
+    pub   (add-points.ecc (point left) pub)
     cad   right
     dep   +(dep)
     ind   i
@@ -173,7 +173,7 @@
   ^-  @uc
   ::  removes checksum
   ::
-  %^  rsh  3  4
+  %+  rsh  [3 4]
   %+  en-base58check
     [4 (version-bytes network %pub %.n)]
   [20 identity]
@@ -211,15 +211,15 @@
   |=  [v=byts d=byts]
   =+  p=[(add wid.v wid.d) (can 3 ~[d v])]
   =-  (can 3 ~[4^- p])
-  %^  rsh  3  28
+  %+  rsh  [3 28]
   (sha-256l:sha 32 (sha-256l:sha p))
 ::
 ++  de-base58check
   ::  vw: amount of version bytes
   |=  [vw=@u t=tape]
   =+  x=(de-base58:mimes:html t)
-  =+  hash=(sha-256l:sha 32 (sha-256:sha (rsh 3 4 x)))
-  ?>  =((end 3 4 x) (rsh 3 28 hash))
+  =+  hash=(sha-256l:sha 32 (sha-256:sha (rsh [3 4] x)))
+  ?>  =((end [3 4] x) (rsh [3 28] hash))
   (cut 3 [vw (sub (met 3 x) (add 4 vw))] x)
 ::
 ++  hash160

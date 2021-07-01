@@ -1,78 +1,93 @@
+import { ContactUpdate, deSig } from '@urbit/api';
 import _ from 'lodash';
-import { StoreState } from '../../store/type';
-import { Cage } from '~/types/cage';
-import { ContactUpdate } from '~/types/contact-update';
+import { reduceState } from '../state/base';
+import useContactState, { ContactState } from '../state/contact';
 
-type ContactState  = Pick<StoreState, 'contacts'>;
-
-export default class ContactReducer<S extends ContactState>  {
-  reduce(json: Cage, state: S) {
-    const data = _.get(json, 'contact-update', false);
-    if (data) {
-      this.initial(data, state);
-      this.create(data, state);
-      this.delete(data, state);
-      this.add(data, state);
-      this.remove(data, state);
-      this.edit(data, state);
-    }
+const initial = (json: ContactUpdate, state: ContactState): ContactState => {
+  const data = _.get(json, 'initial', false);
+  if (data) {
+    state.contacts = data.rolodex;
+    state.isContactPublic = data['is-public'];
   }
+  return state;
+};
 
-  initial(json: ContactUpdate, state: S) {
-    const data = _.get(json, 'initial', false);
-    if (data) {
-      state.contacts = data;
-    }
+const  add = (json: ContactUpdate, state: ContactState): ContactState => {
+  const data = _.get(json, 'add', false);
+  if (data) {
+    state.contacts[data.ship] = data.contact;
   }
+  return state;
+};
 
-  create(json: ContactUpdate, state: S) {
-    const data = _.get(json, 'create', false);
-    if (data) {
-      state.contacts[data.path] = {};
-    }
+const remove = (json: ContactUpdate, state: ContactState): ContactState => {
+  const data = _.get(json, 'remove', false);
+  if (
+    data &&
+    (data.ship in state.contacts)
+  ) {
+    delete state.contacts[data.ship];
   }
+  return state;
+};
 
-  delete(json: ContactUpdate, state: S) {
-    const data = _.get(json, 'delete', false);
-    if (data) {
-      delete state.contacts[data.path];
+export const edit = (json: ContactUpdate, state: ContactState): ContactState => {
+  const data = _.get(json, 'edit', false);
+  const ship = `~${deSig(data.ship)}`;
+  if (
+    data &&
+    (ship in state.contacts)
+  ) {
+    const [field] = Object.keys(data['edit-field']);
+    if (!field) {
+      return state;
     }
-  }
 
-  add(json: ContactUpdate, state: S) {
-    const data = _.get(json, 'add', false);
-    if (
-      data &&
-      (data.path in state.contacts)
-    ) {
-      state.contacts[data.path][data.ship] = data.contact;
-    }
-  }
-
-  remove(json: ContactUpdate, state: S) {
-    const data = _.get(json, 'remove', false);
-    if (
-      data &&
-      (data.path in state.contacts) &&
-      (data.ship in state.contacts[data.path])
-    ) {
-      delete state.contacts[data.path][data.ship];
-    }
-  }
-
-  edit(json: ContactUpdate, state: S) {
-    const data = _.get(json, 'edit', false);
-    if (
-      data &&
-      (data.path in state.contacts) &&
-      (data.ship in state.contacts[data.path])
-    ) {
-      const edit = Object.keys(data['edit-field']);
-      if (edit.length !== 1) {
-        return;
+    const value = data['edit-field'][field];
+    if(field === 'add-group') {
+      if (typeof value !== 'string') {
+        state.contacts[ship].groups.push(`/ship/${Object.values(value).join('/')}`);
+      } else if (!(state.contacts[ship].groups.includes(value))) {
+        state.contacts[ship].groups.push(value);
       }
-      state.contacts[data.path][data.ship][edit[0]] =
-        data['edit-field'][edit[0]];
+    } else if (field === 'remove-group') {
+      if (typeof value !== 'string') {
+        state.contacts[ship].groups =
+          state.contacts[ship].groups.filter(g => g !== `/ship/${Object.values(value).join('/')}`);
+      } else {
+      state.contacts[ship].groups =
+        state.contacts[ship].groups.filter(g => g !== value);
+      }
+    } else {
+      state.contacts[ship][field] = value;
     }
   }
-}
+  return state;
+};
+
+const setPublic = (json: ContactUpdate, state: ContactState): ContactState => {
+  const data = _.get(json, 'set-public', state.isContactPublic);
+  state.isContactPublic = data;
+  return state;
+};
+
+export const ContactReducer = (json) => {
+  const data: ContactUpdate = _.get(json, 'contact-update', false);
+  if (data) {
+    reduceState<ContactState, ContactUpdate>(useContactState, data, [
+      initial,
+      add,
+      remove,
+      edit,
+      setPublic
+    ]);
+  }
+
+  // TODO: better isolation
+  const res = _.get(json, 'resource', false);
+  if (res) {
+    useContactState.setState({
+      nackedContacts: useContactState.getState().nackedContacts.add(`~${res.ship}`)
+    });
+  }
+};

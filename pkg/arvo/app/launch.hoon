@@ -11,16 +11,25 @@
       [%2 *]
       [%3 *]
       [%4 state-zero]
+      [%5 state-zero]
+      [%6 state-zero]
+      [%7 state-7]
   ==
 ::
 +$  state-zero
+  $:  tiles=tiles-0:store
+      =tile-ordering:store
+      first-time=?
+  ==
+::
++$  state-7
   $:  =tiles:store
       =tile-ordering:store
       first-time=?
   ==
 --
 ::
-=|  [%4 state-zero]
+=|  [%7 state-7]
 =*  state  -
 %-  agent:dbug
 ^-  agent:gall
@@ -30,64 +39,100 @@
 ::
 ++  on-init
   ^-  (quip card _this)
-  =/  new-state  *state-zero
+  =/  new-state  *state-7
   =.  new-state
     %_  new-state
         tiles
       %-  ~(gas by *tiles:store)
-      %+  turn  `(list term)`[%chat %publish %links %weather %clock %dojo ~]
+      %+  turn  `(list term)`[%weather %clock %term ~]
       |=  =term
       :-  term
       ^-  tile:store
-      ?+  term      [[%custom ~] %.y]
-          %chat     [[%basic 'Chat' '/~landscape/img/Chat.png' '/~chat'] %.y]
-          %links    [[%basic 'Links' '/~landscape/img/Links.png' '/~link'] %.y]
-          %dojo     [[%basic 'Dojo' '/~landscape/img/Dojo.png' '/~dojo'] %.y]
-          %publish
-        [[%basic 'Publish' '/~landscape/img/Publish.png' '/~publish'] %.y]
+      ?+  term  [[%custom ~ ~] %.y]
+        %term   [[%basic 'Terminal' '/~landscape/img/term.png' '/~term'] %.y]
       ==
-        tile-ordering  [%chat %publish %links %weather %clock %dojo ~]
+        tile-ordering  [%weather %clock %term ~]
     ==
-  [~ this(state [%4 new-state])]
+  [~ this(state [%7 new-state])]
 ::
 ++  on-save  !>(state)
 ++  on-load
   |=  old=vase
   ^-  (quip card _this)
   =/  old-state  !<(versioned-state old)
+  =|  cards=(list card)
+  |-  ^-  (quip card _this)
+  ?:  ?=(%7 -.old-state)
+    [cards this(state old-state)]
+  ::
+  ?:  ?=(%6 -.old-state)
+    =/  new-tiles=tiles:store
+      %-  ~(gas by *tiles:store)
+      %+  turn  ~(tap by tiles.old-state)
+      |=  [=term =tile-0:store]
+      :-  term
+      :_  is-shown.tile-0
+      ?-  -.type.tile-0
+        %basic   type.tile-0
+        %custom  [%custom ~ ~]
+      ==
+    $(old-state [%7 new-tiles tile-ordering.old-state first-time.old-state])
+  ::
+  ?:  ?=(%5 -.old-state)
+    ::  replace %dojo with %term
+    ::
+    =.  tiles.old-state
+      %+  ~(put by (~(del by tiles.old-state) %dojo))
+        %term
+      :_  is-shown:(~(gut by tiles.old-state) %dojo *tile:store)
+      [%basic 'Terminal' '/~landscape/img/term.png' '/~term']
+    =.  tile-ordering.old-state
+      %+  turn  tile-ordering.old-state
+      |=(t=term ?:(=(%dojo t) %term t))
+    $(old-state [%6 +.old-state])
   ?:  ?=(%4 -.old-state)
-    :-  [%pass / %arvo %e %disconnect [~ /]]~
-    this(state old-state)
+    =.  cards
+      %+  snoc  cards
+      [%pass / %arvo %e %disconnect [~ /]]
+    =.  tiles.old-state
+      (~(del by tiles.old-state) %chat)
+    =.  tiles.old-state
+      (~(del by tiles.old-state) %publish)
+    =.  tiles.old-state
+      (~(del by tiles.old-state) %links)
+    =.  tile-ordering.old-state
+      (skip tile-ordering.old-state |=(=term ?=(?(%links %chat %publish) term)))
+    $(old-state [%5 +.old-state])
   =/  new-state  *state-zero
   =.  new-state
     %_  new-state
         tiles
-      %-  ~(gas by *tiles:store)
-      %+  turn  `(list term)`[%chat %publish %links %weather %clock %dojo ~]
+      %-  ~(gas by *tiles-0:store)
+      %+  turn  `(list term)`[%weather %clock %dojo ~]
       |=  =term
       :-  term
-      ^-  tile:store
+      ^-  tile-0:store
       ?+  term      [[%custom ~] %.y]
-          %chat     [[%basic 'Chat' '/~landscape/img/Chat.png' '/~chat'] %.y]
-          %links    [[%basic 'Links' '/~landscape/img/Links.png' '/~link'] %.y]
           %dojo     [[%basic 'Dojo' '/~landscape/img/Dojo.png' '/~dojo'] %.y]
-          %publish
-        [[%basic 'Publish' '/~landscape/img/Publish.png' '/~publish'] %.y]
       ==
-        tile-ordering  [%chat %publish %links %weather %clock %dojo ~]
+        tile-ordering  [%weather %clock %dojo ~]
     ==
-  :_  this(state [%4 new-state])
-  %+  welp
-    :~  [%pass / %arvo %e %disconnect [~ /]]
-        :*  %pass  /srv  %agent  [our.bowl %file-server]
-            %poke  %file-server-action
-            !>([%serve-dir / /app/landscape %.n %.y])
-        ==
-    ==
-  %+  turn  ~(tap by wex.bowl)
-  |=  [[=wire =ship =term] *]
-  ^-  card
-  [%pass wire %agent [ship term] %leave ~]
+  %_  $
+    old-state  [%5 new-state]
+  ::
+      cards
+    %+  welp
+      :~  [%pass / %arvo %e %disconnect [~ /]]
+          :*  %pass  /srv  %agent  [our.bowl %file-server]
+              %poke  %file-server-action
+              !>([%serve-dir / /app/landscape %.n %.y])
+          ==
+      ==
+    %+  turn  ~(tap by wex.bowl)
+    |=  [[=wire =ship =term] *]
+    ^-  card
+    [%pass wire %agent [ship term] %leave ~]
+  ==
 ::
 ++  on-poke
   |=  [=mark =vase]
@@ -167,9 +212,14 @@
   ^-  (unit (unit cage))
   ?.  (team:title our.bowl src.bowl)  ~
   ?+  path  [~ ~]
-      [%x %tiles ~]       ``noun+!>([tiles tile-ordering])
-      [%x %first-time ~]  ``noun+!>(first-time)
-      [%x %keys ~]        ``noun+!>(~(key by tiles))
+    [%x %tiles ~]       ``noun+!>([tiles tile-ordering])
+    [%x %first-time ~]  ``noun+!>(first-time)
+    [%x %keys ~]        ``noun+!>(~(key by tiles))
+  ::
+      [%x %runtime-lag ~]
+    :^  ~  ~  %json
+    !>  ^-  json
+    b+.^(? //(scot %p our.bowl)//(scot %da now.bowl)/zen/lag)
   ==
 ::
 ++  on-arvo

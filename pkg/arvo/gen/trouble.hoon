@@ -1,5 +1,16 @@
 ::  Print useful diagnostic information
 ::
+::  base-hash: loosely, the most recent successfully applied update.
+::             Technically, the mergebase of %home with OTA source
+::  sour-hash: most recently downloaded update (not necessarily applied)
+::  home-hash: hash of %home desk, which may differ if you have changed
+::             it, for example with notebooks or 3rd party apps
+::  kids-hash: hash of the %kids desk, which is what you serve to your
+::             children
+::  glob-hash: hash of the glob, which is the js for landscape
+::
+/-  glob
+/+  version
 :-  %say
 |=  [[now=time * bec=beak] ~ ~]
 =*  our      p.bec
@@ -7,7 +18,8 @@
 :-  %noun
 =<
 :~
-  [%base-hash base-hash]
+  [%base-hash (base-hash:version our now)]
+  [%sour-hash sour-hash]
   [%home-hash .^(@uv %cz (pathify ~.home ~))]
   [%kids-hash .^(@uv %cz (pathify ~.kids ~))]
   [%glob-hash glob-state]
@@ -43,7 +55,7 @@
       rift=ryft
   ==
 ::
-++  base-hash
+++  sour-hash
   =+  .^  ota=(unit [=ship =desk =aeon:clay])
           %gx  /(scot %p our)/hood/(scot %da now)/kiln/ota/noun
       ==
@@ -54,8 +66,11 @@
   .^(@uv %cz /[parent]/[desk.u.ota]/(scot %ud ud.cass))
 ::
 ++  glob-state
-  ^-  [@uv @tas]
-  =<  [hash ?~(glob %waiting ?:(-.u.glob %done %trying))]
-  !<  [@ud hash=@uv glob=(unit [? *])]
-  .^(vase %gx (weld (pathify ~.glob ~) /dbug/state/noun))
+  ^-  (list [path @uv @tas])
+  =+  !<  [@ud =globs:glob]
+    .^(vase %gx (weld (pathify ~.glob ~) /dbug/state/noun))
+  %+  turn  ~(tap by globs)
+  |=  [srv=path hash=@uv glob=(unit [? *])]
+  ^-  [path @uv @tas]
+  [srv hash ?~(glob %waiting ?:(-.u.glob %done %trying))]
 --

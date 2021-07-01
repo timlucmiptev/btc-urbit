@@ -1,6 +1,7 @@
 /-  spider
-/+  libstrand=strand, default-agent, verb, server 
+/+  libstrand=strand, default-agent, verb, server
 =,  strand=strand:libstrand
+~%  %spider-top  ..part  ~
 |%
 +$  card         card:agent:gall
 +$  thread       thread:spider
@@ -60,6 +61,7 @@
 ::
 ::  Trie operations
 ::
+~%  %spider  ..card  ~
 |%
 ++  get-yarn
   |=  [=trie =yarn]
@@ -137,6 +139,7 @@
 =|  =state
 =<
   %+  verb  |
+  ~%  %spider-agent  ..bind-eyre  ~
   |_  =bowl:gall
   +*  this         .
       spider-core  +>
@@ -192,6 +195,7 @@
     --
   ::
   ++  on-poke
+    ~/  %on-poke
     |=  [=mark =vase]
     ^-  (quip card _this)
     ?:  ?=(%spider-kill mark)
@@ -208,6 +212,7 @@
     [cards this]
   ::
   ++  on-watch
+    ~/  %on-watch
     |=  =path
     ^-  (quip card _this)
     =^  cards  state
@@ -220,6 +225,7 @@
   ::
   ++  on-leave  on-leave:def
   ++  on-peek
+    ~/  %on-peek
     |=  =path
     ^-  (unit (unit cage))
     ?+    path  (on-peek:def path)
@@ -234,6 +240,7 @@
     ==
   ::
   ++  on-agent
+    ~/  %on-agent
     |=  [=wire =sign:agent:gall]
     ^-  (quip card _this)
     =^  cards  state
@@ -243,6 +250,7 @@
     [cards this]
   ::
   ++  on-arvo
+    ~/  %on-arvo
     |=  [=wire =sign-arvo]
     ^-  (quip card _this)
     =^  cards  state
@@ -261,13 +269,19 @@
     (on-load on-save)
   --
 ::
+~%  %spider-helper  ..get-yarn  ~
 |_  =bowl:gall
 ::
 ++  bind-eyre
   ^-  card
   [%pass /bind %arvo %e %connect [~ /spider] %spider]
 ::
+++  new-thread-id
+  |=  file=term
+  :((cury cat 3) file '--' (scot %uv (sham eny.bowl)))
+::
 ++  handle-http-request
+  ~/  %handle-http-request
   |=  [eyre-id=@ta =inbound-request:eyre]
   ^-  (quip card _state)
   ?>  authenticated.inbound-request
@@ -277,10 +291,11 @@
   =*  input-mark   i.t.site.url
   =*  thread       i.t.t.site.url
   =*  output-mark  i.t.t.t.site.url
-  =/  =tid
-    (scot %uv (sham eny.bowl))
+  =/  =tid         (new-thread-id thread)
   =.  serving.state
     (~(put by serving.state) tid [eyre-id output-mark])
+  ::  TODO: speed this up somehow. we spend about 15ms in this arm alone
+  ::
   =+  .^
       =tube:clay
       %cc 
@@ -290,7 +305,7 @@
   =/  body=json
     (need (de-json:html q.u.body.request.inbound-request))
   =/  input=vase
-    (tube !>(body))
+    (slop !>(~) (tube !>(body)))
   =/  =start-args
     [~ `tid thread input]
   =^  cards  state
@@ -312,6 +327,7 @@
   `state
 ::
 ++  handle-sign
+  ~/  %handle-sign
   |=  [=tid =wire =sign-arvo]
   =/  yarn  (~(get by tid.state) tid)
   ?~  yarn
@@ -328,13 +344,14 @@
   (take-input u.yarn ~ %agent wire sign)
 ::
 ++  handle-start-thread
+  ~/  %handle-start-thread
   |=  [parent-tid=(unit tid) use=(unit tid) file=term =vase]
   ^-  (quip card ^state)
   =/  parent-yarn=yarn
     ?~  parent-tid
       /
     (~(got by tid.state) u.parent-tid)
-  =/  new-tid  (fall use (scot %uv (sham eny.bowl)))
+  =/  new-tid  (fall use (new-thread-id file))
   =/  =yarn  (snoc parent-yarn new-tid)
   ::
   ?:  (has-yarn running.state yarn)
@@ -350,19 +367,20 @@
   =/  pax=path
     ~|  no-file-for-thread+file
     (need (get-fit:clay [our q.byk da+now]:bowl %ted file))
-  =/  =card
-    :+  %pass  /build/[new-tid]
-    [%arvo %c %warp our.bowl %home ~ %sing %a da+now.bowl pax]
-  [[card ~] state]
+  :_  state
+  :_  ~
+  :+  %pass  /build/[new-tid]
+  [%arvo %c %warp our.bowl %home ~ %sing %a da+now.bowl pax]
 ::
 ++  handle-build
+  ~/  %handle-build
   |=  [=tid =sign-arvo]
   ^-  (quip card ^state)
   =/  =yarn  (~(got by tid.state) tid)
   =.  starting.state
     (~(jab by starting.state) yarn |=([=trying =vase] [%none vase]))
   ~|  sign+[- +<]:sign-arvo
-  ?>  ?=([?(%b %c) %writ *] sign-arvo)
+  ?>  ?=([?(%behn %clay) %writ *] sign-arvo)
   =/  =riot:clay  p.sign-arvo
   ?~  riot
     (thread-fail-not-running tid %build-thread-error *tang)
@@ -374,6 +392,7 @@
   (start-thread yarn p.maybe-thread)
 ::
 ++  start-thread
+  ~/  %start-thread
   |=  [=yarn =thread]
   ^-  (quip card ^state)
   =/  =vase  vase:(~(got by starting.state) yarn)
@@ -392,19 +411,23 @@
 ++  handle-stop-thread
   |=  [=tid nice=?]
   ^-  (quip card ^state)
-  =/  =yarn  (~(got by tid.state) tid)
-  ?:  (has-yarn running.state yarn)
+  =/  yarn=(unit yarn)  (~(get by tid.state) tid)
+  ?~  yarn
+    ~&  %stopping-nonexistent-thread
+    [~ state]
+  ?:  (has-yarn running.state u.yarn)
     ?:  nice
-      (thread-done yarn *vase)
-    (thread-fail yarn %cancelled ~)
-  ?:  (~(has by starting.state) yarn)
+      (thread-done u.yarn *vase)
+    (thread-fail u.yarn %cancelled ~)
+  ?:  (~(has by starting.state) u.yarn)
     (thread-fail-not-running tid %stopped-before-started ~)
-  ~&  [%thread-not-started yarn]
+  ~&  [%thread-not-started u.yarn]
   ?:  nice
-    (thread-done yarn *vase)
-  (thread-fail yarn %cancelled ~)
+    (thread-done u.yarn *vase)
+  (thread-fail u.yarn %cancelled ~)
 ::
 ++  take-input
+  ~/  %take-input
   |=  [=yarn input=(unit input:strand)]
   ^-  (quip card ^state)
   =/  m  (strand ,vase)
@@ -486,7 +509,7 @@
 ++  thread-fail
   |=  [=yarn =term =tang]
   ^-  (quip card ^state)
-  ::  %-  (slog leaf+"strand {<yarn>} failed" leaf+<term> tang)
+  ::%-  (slog leaf+"strand {<yarn>} failed" leaf+<term> tang)
   =/  =tid  (yarn-to-tid yarn)
   =/  fail-cards  (thread-say-fail tid term tang)
   =^  cards  state  (thread-clean yarn)
